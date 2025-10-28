@@ -151,8 +151,6 @@ Donde:
 * `%m` = memoria
 * `%G` = grupos de GPU
 
-
-
 ## squeue - Estado de la cola de trabajos
 
 ``` bash
