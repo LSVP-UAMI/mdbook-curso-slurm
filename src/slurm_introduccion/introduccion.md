@@ -2,6 +2,47 @@
 ![Clúster Yoltla](./images/yolta.jpg)
 
 # Infraestructura
+
+## Nodos Yoltla/login
+![Nodos yoltla](./images/nodos_yoltla/login_yoltla.png)
+
+* 2 Nodos
+    * Intel(R) Xeon(R) CPU E5-2695 v2 @ 2.40GHz
+    * 48 CPUs
+    * 94 GB RAM
+
+## Nodos nc
+![Nodos nc](./images/nodos_yoltla/nc_yoltla.png)
+
+* 140 Nodos
+    * Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz
+    * 20 CPUs
+    * 62 GB RAM
+
+## Nodos ncz
+![Nodos ncz](./images/nodos_yoltla/ncz_yoltla.png)
+
+* 24 Nodos
+    * AMD EPYC 7513 32-Core Processor
+    * 64 CPUs
+    * 500 GB RAM
+
+## Nodos ngk
+
+## Nodos tt
+![Nodos tt](./images/nodos_yoltla/tt_yoltla.png)
+
+* 104 Nodos 
+    * Intel(R) Xeon(R) CPU E5-2660 v3 @ 2.60GHz
+    * 20 CPUs
+    * 125 GB RAM
+
+## Nodos gpu
+
+
+
+
+
 Descripción de los nodos de procesamiento
 
 # Accediendo al clúster
@@ -18,6 +59,10 @@ de acceso se requiere de un shell seguro (secure shell / SSH).
 ```admonish warning title="IMPORTANTE"
 La primera conexión debe realizarse al nodo de acceso `yoltla0`.
 ```
+
+Diagrama de conexión por ssh al clúster Yoltla
+
+![Conexión yoltla-ssh](./images/diagrama_yoltla.png)
 
 ## SSH GNU/Linux OS X
 
@@ -153,59 +198,163 @@ Donde:
 
 ## squeue - Estado de la cola de trabajos
 
-``` bash
-    # Ver todos los trabajos
-    squeue
+El comando `squeue` muestra información sobre los trabajos en cola y 
+en ejecución dentro del clúster.
 
-    # Trabajos de un usuario específico
-    squeue -u nombre_usuario
-
-    # Información detallada
-    squeue -l
-
-    # Trabajos en una partición específica
-    squeue -p particion_gpu
-
-    # Formato personalizado
-    squeue -o "%.18i %.9P %.8j %.8u %.2t %.10M %.6D %R"
-
-    # Trabajos pendientes
-    squeue -t PENDING
-
-    # Trabajos ejecutándose
-    squeue -t RUNNING
+```bash
+    # Sintaxis básica.
+    squeue [opciones]
 ```
 
-Estados comunes:
+Al ejecutar `squeue` sin parametros, se mostrará información similar a la 
+siguiente: 
 
-- PD: Pendiente
-- R: Ejecutándose
-- CG: Completado
-- F: Fallado
-- CA: Cacelado
 
+```bash
+    [pepe@yoltla0 ~]$ squeue
+
+    JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+    696283      gpus pruebaGr   a.7350  R 1-13:54:33      1 ngk4
+    695490      gpus     M_R1   i.5519  R 3-14:29:39      1 ngk9
+    697438      gpus  T230KFu l.100038  R    9:04:47      1 ngk10
+    697519  q12h-80p prueba_q   i.5533 PD       0:00      4 (Resources)
+    697518   q1d-20p       M8  cedillo  R      44:57      1 nc112
+    697443   q1d-20p 3hit20wY     frml  R    2:46:52      1 nc113
+    697360  q1d-320p mgco3Bul      jgo PD       0:00     16 (Resources)
+    697286   q1d-40p corriend     insa  R    5:27:56      2 nc[39,42]
+    697509   q1h-20p BCTrpZ_c   a.7312  R      52:14      1 nc88
+    697508   q1h-20p BCTrpZ_c   a.7312  R      52:32      1 nc83
+```
+
+En la siguiente tabla se da una descripción de los campos que conforman la 
+salida anterior:
+
+|   **Campo**   |   **Descripción** |
+|---------------|-------------------|
+| JOBID | Identificador del trabajo. |
+| PARTITION | Partición donde se ejecuta. |
+| NAME | Nombre del trabajo. |
+| USER | Usuario que envio el trabajo. |
+| ST | Estado del trabajo (por ejemplo, `R`, `PD`, `GC`, etc) |
+| TIME | Tiempo trascurrido. |
+| NODES | Número de nodos asignados. |
+| NODELIST (REASON) | Lsita de nodos asignados o razón por la que el trabajo está pendiente. |
+
+Estados comunes de los trabajos: 
+
+| **Código** | **Estado** | **Descripción** |
+|------------|------------|-----------------|
+| `PD` | Pending | Esperando recursos o dependencias. |
+| `R` | Running | En ejecucuón. |
+| `CG` | Completing | Termonando ejecución. |
+| `CD` | Completed | Finalizado con éxito. | 
+| `F` | Failed | Finalizó con error. | 
+| `TO` | Timeout | Excedió el tiempo máximo. | 
+| `CA` | Cancelled | Cancelado por el usuario o el sistema. | 
+
+Mostrar los trabajos de un usuario
+```bash
+    squeue -u 'usuario'
+```
+
+Mostrar trabajos en una partición específica:
+
+```bash
+    squeue -p 'partición'
+```
+
+Mostrar formato personalizado:
+```bash
+    squeue -o "%.18i %.9P %.8j %.8u %.2t %.10M %.6D %R"
+```
+
+Donde:
+* `%i` = JOBID.
+* `%P` = Partición.
+* `%j` = Nombre del trabajo.
+* `%u` = Usuario.
+* `%t` = Estado.
+* `%M` = Tiempo transcurrido.
+* `%D` = Nodos asignados.
+* `%R` = Motivo o lista de nodos.
 
 ## sacct - Información de trabajos completados
 
+`sacct` muestra información histórica o detallada sobre los trabajos 
+que ya se ejecutaron o se están ejecutando.
+
 ```bash
-    # Trabajos del día actual
-    sacct
+    # Sintaxis básica
+    sacct [opciones]
+```
+Ejemplo de salida típica:
+```bash
+       JobID    JobName  Partition    Account  AllocCPUS  State  ExitCode
+------------ ---------- ---------- ---------- ---------- ------- --------
+12345        jobA       batch       users          64    COMPLETED 0:0
+12346        jobB       gpu         users          32    FAILED    1:0
+12347.batch  jobC       debug       users          16    CANCELLED 0:15
+```
 
-    # Trabajos de un usuario específico
-    sacct -u nombre_usuario
+Trabajos de un suario.
+```bash
+    sacct -u 'usuario'
+```
 
-    # Trabajos en un rango de fechas
+Trabajos en un rango de fechas.
+```bash
     sacct -S 2024-01-01 -E 2024-01-02
+```
 
-    # Información detallada de un trabajo
+Información detallada de un trabajo
+```bash
     sacct -j 12345 -o jobid,jobname,partition,account,alloccpus,state,exitcode
+```
 
-    # Mostrar trabajos hijos de un array
-    sacct -j 12345 --format=JobID,JobName,Partition,Account,AllocCPUS,State,ExitCode
+Trabajos cancelados o fallidos
+```bash
+    sacct -s CA,F
 ```
 
 
 ## scontrol - Control y configuración
+
+
+`scontrol` es una herramienta administrativa y de diagnóstico que permite 
+ver y modificar el estado de varios elementos de Slurm:
+trabajos(`job`), nodos(`node`), particiones(`partition`), y más
+
+```bash
+    # Sintaxis básica
+    scontrol [subcomando] [objeto] [argumentos]
+```
+
+Ejemplos generales: 
+```bash
+    scontrol show node node01
+    scontrol show job 12345
+    scontrol update NodeName=node01 State=DOWN Reason="Mantenimiento"
+```
+
+Los principales subcomandos se muestran en la siguiente tabla
+
+| **subcomando** | **Descripción** |
+|----------------|-----------------|
+| `show` | Muestra información detallada. |
+| `update` | Cambia atributos o estados. | 
+| `reconfigure` | Recarga la configuración de Slurm sin reiniciar. |
+| `ping` | Verifica si el `slurmctl` está respondiendo. |
+| `hold`/`release` | Suspende o libera trabajos en espera. |
+| `listpids` | Muestra los `PIDs` asociados a un trabajo. |
+
+
+
+
+
+
+
+
+
 
 ```bash
     # Información detallada de un trabajo
