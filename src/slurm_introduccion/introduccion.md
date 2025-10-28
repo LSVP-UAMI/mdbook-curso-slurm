@@ -80,22 +80,78 @@ Características principales:
 
 ## sinfo - Información del estado del cluster 
 
+**sinfo** muestra información sobre los nodos y particiones del cúster. Con esta 
+herramienta se puede consultar el estado de los recursos disponibles, como CPUs, 
+memoria, tiempo máximo de ejecución y disponibilidad de los nodos.
+
 ```bash
-    # Estado básico de los nodos
-    sinfo
-
-    # Información detallada
-    sinfo -l
-
-    # Mostrar particiones específicas
-    sinfo -p particion1,particion2
-
-    # Formato personalizado
-    sinfo -o "%n %t %C %m"
-
-    # Mostrar nodos por estado
-    sinfo -N -o "%n %t %C %m"
+    # Sintaxis básica.
+    sinfo [opciones]
 ```
+
+Si se ejecuta **sinfo** sin opciones, mostrará una vista general de las particiones y 
+sus estados.
+
+```bash
+    [pepe@yoltla0 ~]$ sinfo
+
+    PARTITION  AVAIL  TIMELIMIT  NODES  STATE NODELIST
+    q1h-20p*      up    1:00:00      1  inval nc84
+    q1h-20p*      up    1:00:00     10 drain$ nc[7,9-12,21,69-72]
+    q1h-20p*      up    1:00:00      2 drain* nc[17,50]
+    q1h-20p*      up    1:00:00      1  drain nc43
+    q1h-20p*      up    1:00:00     65  alloc nc[2-5,8,13-16,23-24,26]
+    q1d-20p       up 1-00:00:00     14  down* nc[18,20,22,27-28,33-34]
+    q1d-20p       up 1-00:00:00      6   drng nc[19,55,61,67,80,99]
+    q1d-20p       up 1-00:00:00      1  drain nc43
+```
+
+En la siguiente tabla se da una descripción de los campos que conforman la salida anterior:
+
+|   **Campo**   |   **Descripción** |
+|---------------|-------------------|
+|   PARTITION   |   Nombre de la partición.|
+|   AVAIL       |   Estado de la partición.|
+|   TIMELIMIT   |   Tiempo máximo de ejecución para cualquier trabajo.|
+|   NODES       |   Número de nodos en la partición.|
+|   STATE       |   Estado actual de los nodos (por ejemplo, `idle`, `alloc`, `mix`, `down`).|
+|   NODELIST    |   Lista de nodos que conforman la partición.|
+
+Estados de los nodos: 
+
+|   **Estado**   |   **Descripción** |
+|----------------|-------------------|
+| idle  | Nodo libre, sin trabajos asignados. | 
+| alloc | Nodo completamente asignado de trabajos. |
+| mix   | Nodo parcialmente ocupado. |
+| down  | Nodo fuera de servicio. |
+| drain | Nodo deshabilitado para nuevos trabajos (por mantenimeinto o error). |
+
+Mostrar particiones especificas: 
+```bash
+    sinfo -p particion1,particion2
+```
+
+Mostrar detalles a nivel de nodos:
+```bash
+    sinfo -N
+```
+
+Mostrar nodos con formato personalizado:
+```bash
+    sinfo -o "%N %P %t %C %m %G"
+```
+
+Donde: 
+
+* `%N` = nombre del nodo
+* `%P` = partición
+* `%t` = estado del nodo
+* `%C` = configuración de CPU
+* `%m` = memoria
+* `%G` = grupos de GPU
+
+
 
 ## squeue - Estado de la cola de trabajos
 
