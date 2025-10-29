@@ -154,47 +154,44 @@ sus estados.
 En la siguiente tabla se da una descripción de los campos que conforman la salida anterior:
 
 |   **Campo**   |   **Descripción** |
-|---------------|-------------------|
-|   PARTITION   |   Nombre de la partición.|
-|   AVAIL       |   Estado de la partición.|
-|   TIMELIMIT   |   Tiempo máximo de ejecución para cualquier trabajo.|
-|   NODES       |   Número de nodos en la partición.|
-|   STATE       |   Estado actual de los nodos (por ejemplo, `idle`, `alloc`, `mix`, `down`).|
-|   NODELIST    |   Lista de nodos que conforman la partición.|
+|:-------------:|-------------------|
+|   `PARTITION` |   Nombre de la partición.|
+|   `AVAIL`     |   Estado de la partición.|
+|   `TIMELIMIT` |   Tiempo máximo de ejecución para cualquier trabajo.|
+|   `NODES`     |   Número de nodos en la partición.|
+|   `STATE`     |   Estado actual de los nodos (por ejemplo, `idle`, `alloc`, `mix`, `down`).|
+|   `NODELIST`  |   Lista de nodos que conforman la partición.|
 
 Estados de los nodos: 
 
 |   **Estado**   |   **Descripción** |
-|----------------|-------------------|
-| idle  | Nodo libre, sin trabajos asignados. | 
-| alloc | Nodo completamente asignado de trabajos. |
-| mix   | Nodo parcialmente ocupado. |
-| down  | Nodo fuera de servicio. |
-| drain | Nodo deshabilitado para nuevos trabajos (por mantenimeinto o error). |
+|:--------------:|-------------------|
+| `idle`  | Nodo libre, sin trabajos asignados. | 
+| `alloc` | Nodo completamente asignado de trabajos. |
+| `mix`   | Nodo parcialmente ocupado. |
+| `down`  | Nodo fuera de servicio. |
+| `drain` | Nodo deshabilitado para nuevos trabajos (por mantenimeinto o error). |
 
-Mostrar particiones especificas: 
+**Ejemplos de uso**
 ```bash
+    # Mostrar particiones especificas. 
     sinfo -p particion1,particion2
-```
 
-Mostrar detalles a nivel de nodos:
-```bash
+    # Mostrar detalles a nivel de nodos.
     sinfo -N
-```
 
-Mostrar nodos con formato personalizado:
-```bash
+    # Mostrar nodos con formato personalizado
     sinfo -o "%N %P %t %C %m %G"
+
+        #Donde: 
+        # %N = nombre del nodo
+        # %P = partición
+        # %t = estado del nodo
+        # %C = configuración de CPU
+        # %m = memoria
+        # %G = grupos de GPU
 ```
-
-Donde: 
-
-* `%N` = nombre del nodo
-* `%P` = partición
-* `%t` = estado del nodo
-* `%C` = configuración de CPU
-* `%m` = memoria
-* `%G` = grupos de GPU
+**************************************************************************
 
 ## squeue - Estado de la cola de trabajos
 
@@ -230,20 +227,20 @@ En la siguiente tabla se da una descripción de los campos que conforman la
 salida anterior:
 
 |   **Campo**   |   **Descripción** |
-|---------------|-------------------|
-| JOBID | Identificador del trabajo. |
-| PARTITION | Partición donde se ejecuta. |
-| NAME | Nombre del trabajo. |
-| USER | Usuario que envio el trabajo. |
-| ST | Estado del trabajo (por ejemplo, `R`, `PD`, `GC`, etc) |
-| TIME | Tiempo trascurrido. |
-| NODES | Número de nodos asignados. |
-| NODELIST (REASON) | Lsita de nodos asignados o razón por la que el trabajo está pendiente. |
+|:-------------:|-------------------|
+| `JOBID` | Identificador del trabajo. |
+| `PARTITION` | Partición donde se ejecuta. |
+| `NAME` | Nombre del trabajo. |
+| `USER` | Usuario que envio el trabajo. |
+| `ST` | Estado del trabajo (por ejemplo, `R`, `PD`, `GC`, etc) |
+| `TIME` | Tiempo trascurrido. |
+| `NODES` | Número de nodos asignados. |
+| `NODELIST (REASON)` | Lsita de nodos asignados o razón por la que el trabajo está pendiente. |
 
 Estados comunes de los trabajos: 
 
 | **Código** | **Estado** | **Descripción** |
-|------------|------------|-----------------|
+|:----------:|:----------:|-----------------|
 | `PD` | Pending | Esperando recursos o dependencias. |
 | `R` | Running | En ejecucuón. |
 | `CG` | Completing | Termonando ejecución. |
@@ -252,31 +249,29 @@ Estados comunes de los trabajos:
 | `TO` | Timeout | Excedió el tiempo máximo. | 
 | `CA` | Cancelled | Cancelado por el usuario o el sistema. | 
 
-Mostrar los trabajos de un usuario
+**Ejemplos de uso**
 ```bash
+    # Mostrar los trabajos de un usuario.
     squeue -u 'usuario'
-```
 
-Mostrar trabajos en una partición específica:
-
-```bash
+    # Mostrar trabajos en una partición específica.
     squeue -p 'partición'
-```
 
-Mostrar formato personalizado:
-```bash
+    # Mostrar formato personalizado.
     squeue -o "%.18i %.9P %.8j %.8u %.2t %.10M %.6D %R"
-```
 
-Donde:
-* `%i` = JOBID.
-* `%P` = Partición.
-* `%j` = Nombre del trabajo.
-* `%u` = Usuario.
-* `%t` = Estado.
-* `%M` = Tiempo transcurrido.
-* `%D` = Nodos asignados.
-* `%R` = Motivo o lista de nodos.
+        #Donde:
+        # %i = JOBID.
+        # %P = Partición.
+        # %j = Nombre del trabajo.
+        # %u = Usuario.
+        # %t = Estado.
+        # %M = Tiempo transcurrido.
+        # %D = Nodos asignados.
+        # %R = Motivo o lista de nodos.
+
+```
+**************************************************************************
 
 ## sacct - Información de trabajos completados
 
@@ -296,26 +291,21 @@ Ejemplo de salida típica:
 12347.batch  jobC       debug       users          16    CANCELLED 0:15
 ```
 
-Trabajos de un suario.
+**Ejemlos de uso**
 ```bash
+    # Información de trabajos de un suario.
     sacct -u 'usuario'
-```
-
-Trabajos en un rango de fechas.
-```bash
+    
+    # Información de trabajos en un rango de fechas.
     sacct -S 2024-01-01 -E 2024-01-02
-```
-
-Información detallada de un trabajo
-```bash
+    
+    # Información detallada de un trabajo
     sacct -j 12345 -o jobid,jobname,partition,account,alloccpus,state,exitcode
-```
-
-Trabajos cancelados o fallidos
-```bash
+    
+    # Información de trabajos cancelados o fallidos
     sacct -s CA,F
 ```
-
+-------------------------------------
 
 ## scontrol - Control y configuración
 
@@ -329,16 +319,10 @@ trabajos(`job`), nodos(`node`), particiones(`partition`), y más
     scontrol [subcomando] [objeto] [argumentos]
 ```
 
-Ejemplos generales: 
-```bash
-    scontrol show node node01
-    scontrol show job 12345
-    scontrol update NodeName=node01 State=DOWN Reason="Mantenimiento"
-```
 
-Los principales subcomandos se muestran en la siguiente tabla
+Los principales subcomandos se muestran en la siguiente tabla.
 
-| **subcomando** | **Descripción** |
+| **Subcomando** | **Descripción** |
 |----------------|-----------------|
 | `show` | Muestra información detallada. |
 | `update` | Cambia atributos o estados. | 
@@ -347,72 +331,80 @@ Los principales subcomandos se muestran en la siguiente tabla
 | `hold`/`release` | Suspende o libera trabajos en espera. |
 | `listpids` | Muestra los `PIDs` asociados a un trabajo. |
 
-
-
-
-
-
-
-
-
-
+**Ejemplos de uso**
 ```bash
-    # Información detallada de un trabajo
-    scontrol show job 12345
+    # Información de un trabajo.
+    scontrol show job 12346
 
-    # Información de un nodo
+    # Información de un nodo.
     scontrol show node nodo01
 
-    # Información de particiones
-    scontrol show partition
+    # Liberar un nodo.
+    scontrol update nodoname=nodo01 state=RESUME
 
-    # Mantener un nodo
-    scontrol update nodename=nodo01 state=DRAIN reason="mantenimiento"
-
-    # Liberar un nodo
-    scontrol update nodename=nodo01 state=RESUME
-
-    # Modificar parámetros de un trabajo
-    scontrol update jobid=12345 TimeLimit=60:00
+    # Modificar parámetros de un trabajo.
+    scontrol update jobid=12345 TimeLimit=50:00
 ```
+**************************************************************************
 
 ## scancel - Cancelar trabajos
 
+`scancel` se usa para detener uno o varios trabajos en ejecución o pendientes.
+
 ```bash
-    # Cancelar un trabajo específico
-    scancel 12345
-
-    # Cancelar todos los trabajos de un usuario
-    scancel -u nombre_usuario
-
-    # Cancelar trabajos pendientes
-    scancel -t PENDING -u nombre_usuario
+    # Sintaxis básica
+    scancel [opciones] <JOBID>
 ```
+
+**Ejemplos de uso**
+```bash
+    # Cancelar un trabajo específico.
+    scanccel 12345
+
+    # Cancelar múltiples trabajos a la vez.
+    scancel 12345 78945 65478 
+
+    # Cancelar todos tus trabajos.
+    scancel -u $USER
+    acancel -u 'nombre_usuario'
+
+    # Cancelar todos los trabajos de una partición.
+    scancel -p 'partición'
+
+    # Cancelar todos los trabajos en ejecución.
+    scancel -t RUNNING
+
+    # Cancelar trabajos pendientes.
+    scancel -t PENDING -u 'nombre_usuario'
+```
+**************************************************************************
+
+
 
 # Directivas Slurm
 
 Las directivas establecen las opciones con las que se va a ejecutar el trabajo.
 
-|   **Directiva**         |   **Descripción**            |   **Uso**   |
-|-------------------      |---------------------         |-------------|
-|  --job-name=trabajo     |  Nombre del trabajo.         |  Opcional  |
-|  --output=salida        |  Salida estándar.            |  Opcional  |
-|  --error=error          |  Error estándar.             |  Opcional  |
-|  --partition=partición  |  Nombre de la partición.     |  Obligatorio  |
-|  --time=dd-hh:mm:ss     |  Tiempo máximo de ejecución. |  Obligatorio  |
-|  --nodes=#              |  Número de nodos.            |  Obligatorio  |
-|  --ntasks-per-node=#    |  Número de tareas por nodo.  |  Obligatorio  |
-|  --cpus-per-task=#      |  Número de CPUs por tarea.   |  Obligatorio  |
-|  --mem=#                |  Memoria por nodo.           |  Opcional     |
-|  --mail-user=email      |  Correo electrónico del usuario.  |  Opcional  |
-|  --mail-type=eventos    |  Eventos que se notificarán por correo electrónico.  |  Opcional  |
+| **Directiva** | **Descripción** | **Uso** |
+|---------------|-----------------|:-------:|
+| `--job-name=trabajo`     |  Nombre del trabajo.         |  Opcional  |
+| `--output=salida`        |  Salida estándar.            |  Opcional  |
+| `--error=error`          |  Error estándar.             |  Opcional  |
+| `--partition=partición`  |  Nombre de la partición.     |  Obligatorio  |
+| `--time=dd-hh:mm:ss`     |  Tiempo máximo de ejecución. |  Obligatorio  |
+| `--nodes=#`              |  Número de nodos.            |  Obligatorio  |
+| `--ntasks-per-node=#`    |  Número de tareas por nodo.  |  Obligatorio  |
+| `--cpus-per-task=#`      |  Número de CPUs por tarea.   |  Obligatorio  |
+| `--mem=#`                |  Memoria por nodo.           |  Opcional     |
+| `--mail-user=email`      |  Correo electrónico del usuario.  |  Opcional  |
+| `--mail-type=eventos`    |  Eventos que se notificarán por correo electrónico.  |  Opcional  |
 
 ```admonish warning title="IMPORTANTE"
-Sólo se utiliza la directiva:
+**Sólo se utiliza la directiva:**
     
     --cpus-per-task=#
     
-cuando el programa usa memoria compartida (OpenMP).
+**cuando el programa usa memoria compartida (OpenMP).**
 ```
 
 # Srun 
