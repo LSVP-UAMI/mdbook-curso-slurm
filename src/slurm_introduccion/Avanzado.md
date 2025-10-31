@@ -13,6 +13,7 @@ de alta velocidad.
 
 * Técnicas de computación paralela para dividir los problemas en partes 
 más pequeñas que se ejecutan simultáneamente.
+****************************************************************************************************
 
 
 # Ley de Moore
@@ -26,6 +27,7 @@ aproximadamente cada dos años.
 Aunque esta tendencia se mantuvo durante varias décadas, en los últimos años ha 
 comenzado a desacelerarse debido a límites físicos en el tamaño de los transistores 
 y problemas de consumo energético y calor.
+****************************************************************************************************
 
 
 # Computación Paralela
@@ -42,7 +44,9 @@ El principio básico es: `Un problema grande se divide en partes más pequeñas 
 pueden resolverse al mismo tiempo en diferentes unidades de procesamiento 
 (CPU, GPU, nodos de un clúster, etc.).`
 	
-<center>**IMAGEN**</center>
+<center>
+
+**IMAGEN**</center>
 	
 
 **Tipos de paralelismo**
@@ -79,8 +83,8 @@ Sobrecarga de coordinación, que puede limitar el rendimiento.
 | **Uso de procesadores** | Utiliza un solo procesador o núcleo. | Utiliza múltiples núcleos, procesadores o nodos. |
 | **Comunicación entre procesos** | No es necesaria. | Es esencial para coordinar tareas y compartir resultados. |
 | **Escalabilidad** | Limitada: mejorar el rendimiento depende de un procesador más rápido. | Alta: el rendimiento puede aumentar añadiendo más procesadores. |
+****************************************************************************************************
 
------------------------------------------------------
 
 # Paralelismo Implícito y Explícito
 
@@ -120,8 +124,10 @@ del programa se ejecutan en paralelo y cómo se comunican entre sí.
 | **Facilidad de uso** | Más sencillo, automático. | Más complejo, requiere experiencia. |
 | **Optimización** | Limitada al análisis del compilador. | Puede alcanzar mayor rendimiento. |
 | **Flexibilidad** |Menor. | Mayor (control detallado de recursos). |
+****************************************************************************************************
 
-# Memoria Compartida
+
+# Memoria Compartida (Paralelismo Implícito?)
 
 Es un modelo de programación paralela en el que varios procesadores o hilos 
 acceden al mismo espacio de memoria para leer y escribir datos.
@@ -151,4 +157,86 @@ para evitar conflictos cuando varios hilos modifican los mismos datos.
 - Riesgo de condiciones de carrera si no se sincroniza correctamente el acceso a los datos.
 
 - Menor portabilidad a sistemas distribuidos (donde cada nodo tiene su propia memoria).
+
+************************************************************************************************
+
+
+# OpenMP
+
+OpenMP (Open Multi-Processing) es una API que permite escribir programas 
+paralelos de memoria compartida de forma sencilla, principalmente en 
+C, C++ y Fortran.
+
+Diseñada para aprovechar los procesadores multinúcleo y facilitar la programación 
+paralela sin necesidad de manejar directamente hilos o sincronización compleja.
+
+* Basada en directivas del compilador (comentarios especiales que indican qué 
+partes del código deben ejecutarse en paralelo).
+
+* Utiliza threads (hilos) para dividir el trabajo entre los núcleos disponibles.
+
+* Permite controlar fácilmente la creación de hilos, la distribución de trabajo 
+y la sincronización.
+
+
+**Ventajas**
+
+* Fácil de usar: se agregan pocas líneas de código al programa secuencial.
+
+* Portátil: funciona en distintos sistemas y compiladores compatibles.
+
+* Escalable: permite ajustar el número de hilos según los recursos disponibles.
+
+
+**Usos comunes**
+
+* Simulaciones científicas.
+
+* Procesamiento de datos o imágenes.
+
+* Aplicaciones de ingeniería y física.
+
+# ACTIVIDAD
+****************************************************************************************************
+
+
+# Memoria Distribuida (Paralelismo Explícito?)
+
+La memoria distribuida es un modelo de computación paralela en el que cada 
+procesador o nodo tiene su propia memoria local, en lugar de compartir un 
+espacio de memoria común.
+
+En este enfoque, los procesos deben comunicarse explícitamente entre sí 
+para intercambiar datos, normalmente usando mensajes a través de la red 
+que conecta los nodos.
+
+* Cada nodo tiene su propia memoria privada; no hay acceso directo a la 
+memoria de otros nodos.
+
+* La comunicación entre procesos se realiza mediante mensaje-paso (MPI).
+
+* Escala fácilmente a muchos nodos porque cada uno maneja su memoria de 
+forma independiente.
+
+
+**Ventajas**
+
+* Permite construir sistemas muy grandes y escalables (clústeres con cientos 
+o miles de nodos).
+
+* Reduce problemas de coherencia de caché presentes en memoria compartida.
+
+* Cada nodo puede trabajar de manera independiente hasta que necesita 
+intercambiar información.
+
+
+**Desventajas**
+
+* Requiere que el programador maneje comunicación explícita, lo que aumenta 
+la complejidad del código.
+
+* Mayor latencia de comunicación comparado con la memoria compartida.
+
+* Sincronización y transferencia de datos deben planearse cuidadosamente 
+para no afectar el rendimiento.
 
