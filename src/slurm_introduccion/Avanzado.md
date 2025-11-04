@@ -196,7 +196,11 @@ y la sincronización.
 
 * Aplicaciones de ingeniería y física.
 
-# ACTIVIDAD
+****************************************************************************************************
+
+
+## **ACTIVIDAD**
+
 ****************************************************************************************************
 
 
@@ -239,4 +243,154 @@ la complejidad del código.
 
 * Sincronización y transferencia de datos deben planearse cuidadosamente 
 para no afectar el rendimiento.
+
+****************************************************************************************************
+
+
+# MPI
+
+MPI es un estándar de programación paralela diseñado para sistemas con memoria distribuida, 
+
+* Basado en el modelo de paso de mensajes (“message passing”).
+
+* Permite que varios procesos trabajen de forma colaborativa y sincronizada.
+
+* Los procesos pueden estar en una misma máquina o distribuidos en diferentes nodos de 
+un clúster.
+
+* Es portable y funciona en múltiples plataformas y arquitecturas.
+
+
+| **Funciones** | **Descrpción**| 
+|:-------------:|---------------|
+| `MPI_Init / MPI_Finalize` | Inicializan y finalizan el entorno MPI. |
+| `MPI_Comm_size` | Obtiene el número total de procesos. |  
+| `MPI_Comm_rank`| Identifica el número (rank) del proceso actual. |
+| `MPI_Send / MPI_Recv` | Permiten enviar y recibir mensajes entre procesos. |
+| `MPI_Bcast, MPI_Reduce, MPI_Gather` | Permiten comunicación colectiva (entre todos los procesos del grupo). |
+
+**Ventajas**
+
+* Alta escalabilidad, ideal para sistemas con muchos nodos.
+
+* Gran control sobre la comunicación entre procesos.
+
+* Eficiente para problemas que requieren distribuir grandes volúmenes de datos o cálculos.
+
+**Desventajas**
+
+* La programación es más compleja que en modelos de memoria compartida (como OpenMP).
+
+* Se requiere diseñar la comunicación explícita entre procesos.
+
+* Mayor latencia de comunicación por el uso de red.
+
+****************************************************************************************************
+
+## **ACTIVIDAD**
+
+****************************************************************************************************
+
+# Memoria Híbrida (MPI + OpenMP)
+
+Combina programación de memoria distribuida (MPI) y de memoria compartida (OpenMP).
+
+* **MPI para la comunicación entre nodos:** Se crean procesos MPI separados para cada nodo 
+de un clúster. Estos procesos se comunican entre sí enviando y recibiendo mensajes.
+
+* **OpenMP para la paralelización dentro de los nodos:** Dentro de cada proceso MPI, se 
+pueden crear múltiples hilos utilizando OpenMP. Estos hilos comparten la memoria del 
+nodo y ejecutan tareas en paralelo.
+
+* **Configuración de hilos/procesos:** La configuración se suele hacer estableciendo la 
+cantidad de procesos MPI por nodo (usando `#SBATCH --ntasks-per-node` en un trabajo de 
+SLURM) y luego la cantidad de hilos OpenMP por proceso MPI (por ejemplo, 
+usando la variable de entorno `OMP_NUM_THREADS` o el parámetro `#SBATCH --cpus-per-task`). 
+
+
+**En otras palabras:** Cada nodo ejecuta uno o varios procesos MPI, y dentro de cada 
+proceso se crean varios hilos OpenMP para paralelizar el trabajo.
+
+**Ejemplo**
+
+Imagina un clúster con 4 nodos, cada uno con 8 núcleos:
+
+* Ejecutas 4 procesos MPI (uno por nodo). (Dividir el problema en procesos)
+
+* Dentro de cada proceso, se crean 8 hilos OpenMP (uno por núcleo). (Divides el trabajo de cada proceso en varios hilos)
+
+Así, en total se utilizan 32 hilos en paralelo, combinando ambos modelos.	
+
+
+**Ventajas**
+
+* Mejor aprovechamiento del hardware.
+* Menor comunicación entre nodos que usando solo MPI.
+* Permite reducir la sobrecarga de comunicación y optimizar el uso de memoria compartida.
+* Escalable a sistemas masivos con miles de núcleos.
+
+
+**Desventajas**
+
+* Mayor complejidad en la programación y depuración.
+* Se requiere balancear adecuadamente el número de procesos MPI y los hilos OpenMP.
+* El rendimiento depende fuertemente de la arquitectura del clúster y la configuración de Slurm.
+
+****************************************************************************************************
+
+
+## **ACTIVIDAD**
+
+****************************************************************************************************
+
+
+# Job Arrays
+
+Un Job Array (o arreglo de trabajos) es una forma de enviar múltiples trabajos similares al 
+mismo tiempo con un solo comando o script de envío.
+
+Se utiliza cuando necesitas ejecutar el mismo programa varias veces pero con parámetros 
+diferentes, o simplemente para procesar muchos archivos o tareas en paralelo.
+
+**Idea principal:** En lugar de enviar 100 trabajos individuales con sbatch, puedes enviar 
+un solo Job Array que contenga 100 elementos.
+Cada elemento del arreglo se ejecuta como un trabajo independiente, con su propio ID, variables 
+de entorno y salida.
+
+```bash
+    # Sintaxis básica
+    $SBATCH --array=0-9
+
+Este ejemplo crea 10 tareas (de 0 a 9).
+```
+
+
+
+```bash
+Cada una tendrá una variable de entorno especial:
+
+    # ID del trabajo principal
+    $SLURM_ARRAY_JOB_ID 
+
+    # ID del elemento dentro del arreglo  
+    $SLURM_ARRAY_TASK_ID  
+```
+
+| **Concepto** | **Descripción** |
+|:------------:|-----------------|
+| `--array=0-9` | Define los índices del arreglo |
+| `$SLURM_ARRAY_JOB_ID` | ID del trabajo principal |
+| `$SLURM_ARRAY_TASK_ID` | ID individual de cada tarea |
+| `--array=0-99%10` | Ejecuta 100 tareas, máximo 10 a la vez |
+| Ventaja | Ejecutar muchas tareas similares en paralelo fácilmente |
+
+****************************************************************************************************
+
+
+## **ACTIVIDAD**
+
+****************************************************************************************************
+
+
+# Dependencia de Trabajos
 
