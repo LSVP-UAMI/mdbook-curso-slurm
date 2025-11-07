@@ -1,4 +1,4 @@
 # Summary
 
-- [Introduccion](./slurm_introduccion/introduccion.md)
-- [Avanzado](./slurm_introduccion/Avanzado.md)
+- [Introducción](./introduccion/introduccion.md)
+- [Avanzado](./avanzado/avanzado.md)

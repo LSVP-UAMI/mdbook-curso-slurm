@@ -1,45 +1,50 @@
 # Clúster Yoltla
+
+## **Información?**
 ![Clúster Yoltla](./images/yolta.jpg)
 
 # Infraestructura
 
 ## Nodos Yoltla/login
-![Nodos yoltla](./images/nodos_yoltla/login_yoltla.png)
-
 * 2 Nodos
     * Intel(R) Xeon(R) CPU E5-2695 v2 @ 2.40GHz
     * 48 CPUs
     * 94 GB RAM
 
-## Nodos nc
-![Nodos nc](./images/nodos_yoltla/nc_yoltla.png)
+![Nodos yoltla](./images/nodos_yoltla/login_yoltla.png)
 
+## Nodos nc
 * 140 Nodos
     * Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz
     * 20 CPUs
     * 62 GB RAM
 
-## Nodos ncz
-![Nodos ncz](./images/nodos_yoltla/ncz_yoltla.png)
+![Nodos nc](./images/nodos_yoltla/nc_yoltla.png)
 
+## Nodos ncz
 * 24 Nodos
     * AMD EPYC 7513 32-Core Processor
     * 64 CPUs
     * 500 GB RAM
 
+![Nodos ncz](./images/nodos_yoltla/ncz_yoltla.png)
+
+
 ## Nodos ngk
 
 ## Nodos tt
-![Nodos tt](./images/nodos_yoltla/tt_yoltla.png)
-
 * 104 Nodos 
     * Intel(R) Xeon(R) CPU E5-2660 v3 @ 2.60GHz
     * 20 CPUs
     * 125 GB RAM
 
+![Nodos tt](./images/nodos_yoltla/tt_yoltla.png)
+
 ## Nodos gpu
 
+## Clúster Yoltla
 
+![Clúster yoltla](./images/nodos_yoltla/yoltla.png)
 
 
 
@@ -379,14 +384,12 @@ Los principales subcomandos se muestran en la siguiente tabla.
 ```
 **************************************************************************
 
-
-
 # Directivas Slurm
 
 Las directivas establecen las opciones con las que se va a ejecutar el trabajo.
 
 | **Directiva** | **Descripción** | **Uso** |
-|---------------|-----------------|:-------:|
+|:-------------:|:---------------:|:-------:|
 | `--job-name=trabajo`     |  Nombre del trabajo.         |  Opcional  |
 | `--output=salida`        |  Salida estándar.            |  Opcional  |
 | `--error=error`          |  Error estándar.             |  Opcional  |
@@ -407,8 +410,49 @@ Las directivas establecen las opciones con las que se va a ejecutar el trabajo.
 **cuando el programa usa memoria compartida (OpenMP).**
 ```
 
+
+
 # Srun 
-    - ejercicio
+
+Es un comando de la utilidad del gestor de trabajos de clúster. Se utiliza para 
+ejecutar trabajos en paralelo o de forma interactiva. 
+
+`srun` es síncrono y espera a que el trabajo termine para devolver el control al usuario.
+
+**Ejemplo**
+```bash
+[pepe@nc56 ~]$ srun hostname
+
+nc56
+```
+
+`srun` puede iniciar trabajos o pasos de trabajos dentro de una asignación de recursos existente, 
+```bash
+[pepe@nc56 ~]$ srun -N 1 --ntasks-per-node=4 --mem-per-cpu=1gb -t 1:00:00 -p interactive comando 
+
+```
+
+
+>**ACTIVIDAD**
+>
+>Ejecuta el comando `hostname` en la partición `q1` con `srun`: 
+>* Con un unico prceso.
+>* Con dos procesos iguales.
+>* Con dos procesos en distintos nodos.
+>* Lanzando un porceso que tenga dos ***cores*** reservados.
+>
+>
+>
+>
+>
+>
+>
+
+
+
+
+
+
 
 # Sbatch
     - ejercicio

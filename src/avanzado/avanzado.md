@@ -22,7 +22,7 @@ La Ley de Moore es una observación hecha por Gordon Moore (cofundador de Intel)
 en 1965, que establece que el número de transistores en un chip se duplica 
 aproximadamente cada dos años.
 
-![Ley de Moore](./images/Avanzado/ley_moore.jpg)
+![Ley de Moore](./images/ley_moore.jpg)
 
 Aunque esta tendencia se mantuvo durante varias décadas, en los últimos años ha 
 comenzado a desacelerarse debido a límites físicos en el tamaño de los transistores 
@@ -343,6 +343,7 @@ Así, en total se utilizan 32 hilos en paralelo, combinando ambos modelos.
 
 ****************************************************************************************************
 
+# **TRABAJOS PARALELOS (GPU)**
 
 # Job Arrays
 
@@ -377,7 +378,7 @@ Cada una tendrá una variable de entorno especial:
 ```
 
 | **Concepto** | **Descripción** |
-|:------------:|-----------------|
+|:------------:|:---------------:|
 | `--array=0-9` | Define los índices del arreglo |
 | `$SLURM_ARRAY_JOB_ID` | ID del trabajo principal |
 | `$SLURM_ARRAY_TASK_ID` | ID individual de cada tarea |
@@ -394,3 +395,43 @@ Cada una tendrá una variable de entorno especial:
 
 # Dependencia de Trabajos
 
+La dependencia de trabajos permite controlar el orden de ejecución entre varios 
+jobs, de modo que un trabajo no comience hasta que otro haya terminado o cumpla 
+cierta condición.
+
+**Tipos de dependencias**
+
+Se definen con la opción `--dependency` al enviar un trabajo con sbatch.
+
+| **Dependencia** | **Descripción** | **Ejemplo** |
+|:---------------:|:---------------:|:-----------:|
+| `after:jobid` | El trabajo se ejecuta después de que el indicado haya iniciado. | --dependency=after:12345
+| `afterok:jobid` | Se ejecuta solo si el trabajo indicado terminó correctamente (exit code 0). | --dependency=afterok:12345
+| `afternotok:jobid` | Se ejecuta solo si el trabajo anterior falló. | --dependency=afternotok:12345
+| `afterany:jobid` | Se ejecuta después de que el trabajo termine, sin importar si fue exitoso o no. | --dependency=afterany:12345
+| `singleton` | Asegura que solo un trabajo con el mismo nombre se ejecute a la vez. | --dependency=singleton
+
+**Ejemplo**
+```bash
+#Supón que tienes tres trabajos:
+
+    #preprocesar.sh
+    #analizar.sh
+    #graficar.sh
+
+#1. Primero ejecutas el trabajo de preprocesamiento:
+    jid1=$(sbatch preprocesar.sh | awk '{print $4}')
+
+#2. Luego envías el segundo trabajo con dependencia:
+    jid2=$(sbatch --dependency=afterok:$jid1 analizar.sh | awk '{print $4}')
+
+#3. Y finalmente: 
+    sbatch --dependency=afterok:$jid2 graficar.sh
+
+#4. Asi, slurm gestionará automáticamente el orden: 
+    preprocesar.sh → analizar.sh → graficar.sh
+```
+
+## **ACTIVIDAD?**
+
+# Programación de trabajos
