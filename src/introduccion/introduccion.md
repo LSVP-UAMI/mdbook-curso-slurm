@@ -13,6 +13,8 @@
 
 ![Nodos yoltla](./images/nodos_yoltla/login_yoltla.png)
 
+****************************************************************************************************
+
 ## Nodos nc
 * 140 Nodos
     * Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz
@@ -20,6 +22,8 @@
     * 62 GB RAM
 
 ![Nodos nc](./images/nodos_yoltla/nc_yoltla.png)
+
+****************************************************************************************************
 
 ## Nodos ncz
 * 24 Nodos
@@ -29,8 +33,11 @@
 
 ![Nodos ncz](./images/nodos_yoltla/ncz_yoltla.png)
 
+****************************************************************************************************
 
 ## Nodos ngk
+
+****************************************************************************************************
 
 ## Nodos tt
 * 104 Nodos 
@@ -40,15 +47,20 @@
 
 ![Nodos tt](./images/nodos_yoltla/tt_yoltla.png)
 
+****************************************************************************************************
+
 ## Nodos gpu
+
+****************************************************************************************************
 
 ## Clúster Yoltla
 
 ![Clúster yoltla](./images/nodos_yoltla/yoltla.png)
 
-
-
 Descripción de los nodos de procesamiento
+
+****************************************************************************************************
+
 
 # Accediendo al clúster
 
@@ -69,6 +81,8 @@ Diagrama de conexión por ssh al clúster Yoltla
 
 ![Conexión yoltla-ssh](./images/diagrama_yoltla.png)
 
+****************************************************************************************************
+
 ## SSH GNU/Linux OS X
 
 Desde la terminal ejecute el comando:
@@ -84,6 +98,8 @@ Otra forma de realizar la conexión es utilizando la notación usuario@maquina:
 ```
 ssh <nombre usuario>@<dirección IP del nodo de acceso>
 ```
+
+****************************************************************************************************
 
 ## Windows
 
@@ -107,6 +123,9 @@ contraseña:
 ![Pantalla vienvenida](./images/pantalla_bienvenida.png)
 </center>
 
+****************************************************************************************************
+
+
 # ¿Que es SLURM?
 
 **SLURM** (Simple Linux Utility for Resource Management) es un sistema de 
@@ -124,6 +143,8 @@ Características principales:
 
 * srun: Para lanzar trabajos paralelos
 * sbatch: Para enviar trabajos por lotes
+
+****************************************************************************************************
 
 
 # Comandos principales de slurm
@@ -384,7 +405,94 @@ Los principales subcomandos se muestran en la siguiente tabla.
 ```
 **************************************************************************
 
-# Directivas Slurm
+# Parámetros de Slurm
+
+Indican qué recursos necesita tu trabajo: número de nodos, CPUs, memoria, 
+tiempo, partición, etc.
+
+Se pueden especificar de dos maneras:
+
+- Dentro de un script, con directivas `#SBATCH`: 
+```bash
+    #SBATCH -N 2   =  #SBATCH --nodes=2
+    #SBATCH -n 8   =  #SBATCH --ntasks=1
+    #SBATCH -t 10  =  #SBATCH --time=00:10:00
+```
+        
+- Desde la línea de comandos, al ejecutar `srun` o `sbatch`:
+```bash
+    srun -N 2 -n 8 -t 10 ./mi_programa
+```
+
+Ambos casos son equivalentes: las opciones `#SBATCH` son los mismos parámetros que usarías 
+en la línea de comando.
+
+## Principales parámetros de Slurm
+
+### Recursos computacionales
+
+| **Parámetro** |-|  **Descripción** | **Ejemplo** |
+|:-------------:|-|-----------------|-------------|
+| `--nodes` | `-N` | Número de nodos solicitados. | #SBATCH -N 2 |
+| `--ntasks` | `-n` | Número total de tareas (processes) | #SBATCH -n 8 | 
+| `--ntasks-per-node` | |	Tareas por nodo. | #SBATCH --ntasks-per-node=4 | 
+| `--cpus-per-task` | `-c` | Núcleos (threads) por tarea. | #SBATCH -c 2 |
+| `--gpus` | | Número de GPUs solicitadas. | #SBATCH --gpus=1 |
+| `--gres` | | Recursos genéricos (por ejemplo GPUs, licencias). | #SBATCH --gres=gpu:2 | 
+
+**Ejemplo:**
+```bash
+    #SBATCH -N 2
+    #SBATCH -n 8
+    #SBATCH --ntasks-per-node=4
+    #SBATCH -c 2
+
+2 nodos, cada uno con 4 tareas, cada tarea usa 2 CPUs (total 16 núcleos).
+```
+
+### Memoria
+
+| **Parámetro** | **Descripción** | **Ejemplo** |
+|:-------------:|-----------------|-------------|
+| `--mem` | Memoria total por nodo. | #SBATCH --mem=4G |
+| `--mem-per-cpu` |	Memoria por CPU. | #SBATCH --mem-per-cpu=1G |
+| `--mem-per-gpu` | Memoria por GPU. | #SBATCH --mem-per-gpu=8G |
+
+```admonish note title="Nota"
+- Si usas `--mem` y tienes varios nodos, cada nodo recibirá esa cantidad.
+
+- Si usas `--mem-per-cpu`, Slurm calcula el total = CPUs × memoria por CPU.   
+```
+
+### Tiempo y prioridad
+
+| **Parámetro** | - | **Descripción** | **Ejemplo** |
+|---------------|---|-----------------|-------------|
+| `--time` | `-t` | Tiempo máximo de ejecución. Formato: min o HH:MM:SS. | #SBATCH -t 30 o #SBATCH -t 01:00:00 |
+| `--partition` | `-p` | Cola o partición donde ejecutar el trabajo. | #SBATCH -p gpu |
+| `--nice` | | Cambia la prioridad del trabajo (valor alto = menor prioridad). | #SBATCH --nice=100 | 
+
+
+### Archivos de salida
+
+| **Parámetro** | - | **Descripción** | **Ejemplo** |
+|---------------|---|-----------------|-------------|
+| `--output` | `-o` | Archivo donde guardar la salida estándar (stdout). | #SBATCH -o salida.out |
+| `--error` | `-e` | Archivo donde guardar los errores (stderr). | #SBATCH -e errores.log |
+| `--job-name` | `-J` | Nombre del trabajo. | #SBATCH -J simulacion | 
+| `--mail-user` | | Correo del usuario para notificaciones. | #SBATCH --mail-user=usuario@dominio.com |
+| `--mail-type` | |	Cuándo enviar correo (`BEGIN`, `END`, `FAIL`, `ALL`). | #SBATCH --mail-type=END,FAIL |
+
+```admonish success title=" "
+- `%j` inserta el ID del trabajo automáticamente.
+```
+    
+
+
+
+
+
+
 
 Las directivas establecen las opciones con las que se va a ejecutar el trabajo.
 
