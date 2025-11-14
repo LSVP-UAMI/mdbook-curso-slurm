@@ -437,8 +437,18 @@ en la línea de comando.
 | `--ntasks` | `-n` | Número total de tareas (processes) | #SBATCH -n 8 | 
 | `--ntasks-per-node` | |	Tareas por nodo. | #SBATCH --ntasks-per-node=4 | 
 | `--cpus-per-task` | `-c` | Núcleos (threads) por tarea. | #SBATCH -c 2 |
+| `--partition` | `-p` | Cola o partición donde ejecutar el trabajo. | #SBATCH -p gpu |
 | `--gpus` | | Número de GPUs solicitadas. | #SBATCH --gpus=1 |
 | `--gres` | | Recursos genéricos (por ejemplo GPUs, licencias). | #SBATCH --gres=gpu:2 | 
+
+```admonish warning title="Importante"
+Sólo se utiliza el parámetro 
+
+    --cpus-per-task=
+
+Cuando el trabajo usa memoria compartida (OpenMP).
+```
+
 
 **Ejemplo:**
 ```bash
@@ -459,7 +469,7 @@ en la línea de comando.
 | `--mem-per-gpu` | Memoria por GPU. | #SBATCH --mem-per-gpu=8G |
 
 ```admonish note title="Nota"
-- Si usas `--mem` y tienes varios nodos, cada nodo recibirá esa cantidad.
+- Si usas `--mem` y tienes varios nodos, cada nodo recibirá esa cantidad de memoria.
 
 - Si usas `--mem-per-cpu`, Slurm calcula el total = CPUs × memoria por CPU.   
 ```
@@ -469,7 +479,6 @@ en la línea de comando.
 | **Parámetro** | - | **Descripción** | **Ejemplo** |
 |---------------|---|-----------------|-------------|
 | `--time` | `-t` | Tiempo máximo de ejecución. Formato: min o HH:MM:SS. | #SBATCH -t 30 o #SBATCH -t 01:00:00 |
-| `--partition` | `-p` | Cola o partición donde ejecutar el trabajo. | #SBATCH -p gpu |
 | `--nice` | | Cambia la prioridad del trabajo (valor alto = menor prioridad). | #SBATCH --nice=100 | 
 
 
@@ -487,52 +496,32 @@ en la línea de comando.
 - `%j` inserta el ID del trabajo automáticamente.
 ```
     
-
-
-
-
-
-
-
-Las directivas establecen las opciones con las que se va a ejecutar el trabajo.
-
-| **Directiva** | **Descripción** | **Uso** |
-|:-------------:|:---------------:|:-------:|
-| `--job-name=trabajo`     |  Nombre del trabajo.         |  Opcional  |
-| `--output=salida`        |  Salida estándar.            |  Opcional  |
-| `--error=error`          |  Error estándar.             |  Opcional  |
-| `--partition=partición`  |  Nombre de la partición.     |  Obligatorio  |
-| `--time=dd-hh:mm:ss`     |  Tiempo máximo de ejecución. |  Obligatorio  |
-| `--nodes=#`              |  Número de nodos.            |  Obligatorio  |
-| `--ntasks-per-node=#`    |  Número de tareas por nodo.  |  Obligatorio  |
-| `--cpus-per-task=#`      |  Número de CPUs por tarea.   |  Obligatorio  |
-| `--mem=#`                |  Memoria por nodo.           |  Opcional     |
-| `--mail-user=email`      |  Correo electrónico del usuario.  |  Opcional  |
-| `--mail-type=eventos`    |  Eventos que se notificarán por correo electrónico.  |  Opcional  |
-
-```admonish warning title="IMPORTANTE"
-**Sólo se utiliza la directiva:**
-    
-    --cpus-per-task=#
-    
-**cuando el programa usa memoria compartida (OpenMP).**
-```
-
-
-
 # Srun 
 
 Es un comando de la utilidad del gestor de trabajos de clúster. Se utiliza para 
 ejecutar trabajos en paralelo o de forma interactiva. 
 
+* Puede ejecutar directamente programas en paralelo, sin necesidad de un script de trabajo.
+* uede lanzar tareas dentro de un trabajo que ya ha sido asignado con `sbatch`.
+
 `srun` es síncrono y espera a que el trabajo termine para devolver el control al usuario.
 
-**Ejemplo**
 ```bash
-[pepe@nc56 ~]$ srun hostname
-
-nc56
+    # Sintáxis básica
+    srun [opciones] <comando> 
 ```
+
+**Opciones más comunes**
+
+| **Opción** | **Descripción** | **Ejemplo** |
+|:----------:|:---------------:|:-----------:|
+| `-N <n>` | Número de nodos solicitados. | srun -N 2 hostname |
+| `-n <n>` | Número total de tareas (procesos). | srun -n 4 ./mi_programa |
+| `--ntasks-per-node=<n>` | Número de tareas por nodo. | srun -N 2 --ntasks-per-node=2 ./mi_programa |
+| `-c <n>` | Núcleos (CPUs) por tarea. | srun -n 4 -c 2 ./mi_programa | 
+| `-t <min>` | Tiempo máximo de ejecución. | srun -t 10 ./mi_programa |
+| `-p <partición>` | Especifica la partición (cola) de Slurm. | srun -p gpu ./mi_programa |
+| `--mem=<memoria>` | Solicita memoria por nodo o tarea. | srun --mem=2G ./mi_programa |
 
 `srun` puede iniciar trabajos o pasos de trabajos dentro de una asignación de recursos existente, 
 ```bash

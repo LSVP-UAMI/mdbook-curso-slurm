@@ -1,0 +1,26 @@
+mi_tarea.sh
+    #!/bin/bash
+    
+    # Este script imprimirá el nombre del nodo y el ID de la tarea asignada
+
+    echo "Hola desde la tarea $SLURM_PROCID" en el nodo $(hostname)
+
+1. Ejecuta "mi_tarea.sh" en una sola tarea
+    srun ./mi_tarea.sh
+
+2. Ejecuta 4 tareas en paralelo
+    srun -n 4 ./mi_tarea.sh
+
+3. Ejecuta en 2 Nodos diferentes
+    srun -N 2 --ntask-per-node=1 ./mi_tarea.sh ?
+
+4. Solicita 2 nodos y ejecuta 2 tareas en cada nodo
+    srun -N 2 --ntask-per-node=2 ./mi_tarea.sh
+
+5. Crea un scritp donde:
+    * solicite 2 nodos
+    * ejecute 3 tareas por nodo
+    * se ejecute el la partición ""
+    * asigna nombre a la tarea 
+    * ejecute ./mi_tarea.sh
+    
