@@ -434,7 +434,7 @@ en la línea de comando.
 | **Parámetro** |-|  **Descripción** | **Ejemplo** |
 |:-------------:|-|-----------------|-------------|
 | `--nodes` | `-N` | Número de nodos solicitados. | #SBATCH -N 2 |
-| `--ntasks` | `-n` | Número total de tareas (processes) | #SBATCH -n 8 | 
+| `--ntasks` | `-n` | Número total de tareas (procesos) | #SBATCH -n 8 | 
 | `--ntasks-per-node` | |	Tareas por nodo. | #SBATCH --ntasks-per-node=4 | 
 | `--cpus-per-task` | `-c` | Núcleos (threads) por tarea. | #SBATCH -c 2 |
 | `--partition` | `-p` | Cola o partición donde ejecutar el trabajo. | #SBATCH -p gpu |
@@ -533,35 +533,318 @@ ejecutar trabajos en paralelo o de forma interactiva.
 >**ACTIVIDAD**
 >
 >Ejecuta el comando `hostname` en la partición `q1` con `srun`: 
->* Con un unico prceso.
+>* Con un único proceso.
 >* Con dos procesos iguales.
 >* Con dos procesos en distintos nodos.
->* Lanzando un porceso que tenga dos ***cores*** reservados.
->
->
->
->
->
->
->
-
-
-
-
-
-
+>* Lanzando un proceso que tenga dos ***cores*** reservados.
 
 # Sbatch
-    - ejercicio
 
+Es el comando de Slurm usado para enviar trabajos (scripts) al clúster
+para que se ejecuten en segundo plano.
+
+A diferencia de `srun`, que ejecuta tareas de forma interactiva o dentro 
+de un script de Slurm, `sbatch` no ejecuta el trabajo inmeditamente, 
+solo lo envía el script a la cola del clúster.
+
+```bash 
+    # Sintaxis básica.
+    sbatch mi_script.sh
+```
+
+El script debe contener, al inicio, los parámetros de `slurm`:
+```bash
+#!/bin/bash
+
+#SBATCH --job-name=nombre_trabajo
+#SBATCH --outpu=salida_%j.out
+#SBATCH --error=error_%J.err
+#SBATCH --PARTITION=nombre_prtición
+#SBATCH --ntask=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#BATCH --time=00:30:00
+.
+.
+.
+```
+
+Después de enviar un tranajo, obtendremos una salida similar a la siguiente:
+```bash
+    submitted batch job 12345
+```
+>**Actividad**
+>
+>Usaremos el comando `yes` que repite indefinidamente una cadena y 
+>puede consumir el 100% de CPU. 
+>
+>**script base**
+>```bash
+>#!/bin/bash
+>
+>#SBATCH -J cpu_test
+>#SBATCH -t 5
+>#SBATCH -o salida_%j.out
+>#SBATCH -e error_%j.out
+>
+>echo "Inicio de la prueba en :$(hostname)"
+>echo "Hora de inicio: $(date)"
+>
+># Ejecuta una tarea que ocupa el 100% de CPU.
+>yes > /dev/null
+>
+>echo "Hora de finalización: $(date)"
+>```
+>
+>Completa el script base para que:
+>* El nombre del trabajo sea *cpu_test*
+>* Se ejecute en la partición `q1`.
+>* Se ejecute en una sola tarea (proceso).
+>* Solicita un único núcleo (threads).
+>
+>Manda el scrip a la cola y contesta lo siguiente:
+>* ¿Qué comando puedo usar para ver información del trabajo 
+>en ejecución? (squeue -u $USER)
+>
+>* ¿Cómo puedo cancelar mi trabajo? (scancel jobID)
+>
+>* ¿Qué comando me permite conocer el estado de las particiones del 
+>clúster? (sinfo)
+>
+>* ¿Cuánto tiempo estará la tarea en ejecución si no la cancelo? (Hasta >que alcance el límite de tiempo (-t 5) o sea cancelada manualmente)
+>
+>
+>
 # Htop
 
-# Lmod ó module avial?
-    Cargar modulos en yoltla
+# Reserva de memoria RAM
+
+Cuanta memoria RAM se reserva por core por defecto en slurm?
+
+# Aplicaciones del clúster
+
+Las aplicaciones en el clúster Yoltla están disponibles mediante la herramienta `Modules`. 
+
+## Listar los módulos del clúster
+
+Para listar los módulos del clúster, utilice el comando `module` seguido del subcomando `avail`:
+```
+module avail
+```
+A continuación se muestra de manera parcial la salida de este comando:
+```
+[pepe@yoltla0 ~]$ module avail
+----------------------------- /LUSTRE/yoltla/nc/mf -----------------------------
+compilers/gcc/5.4.0
+compilers/intel/2013/u1/xe-13.2.144
+.
+.
+.
+tools/tmux/2.0
+tools/vmd/1.9.2
+
+---------------------------- /LUSTRE/yoltla/gpu/mf -----------------------------
+compilers/cuda/5.0
+compilers/cuda/5.5
+.
+.
+.
+cuda/7.5/intel/15.2.164/impi/5.0.3.48/gromacs/5.0.7-s
+cuda/7.5/intel/15.6.232/impi/5.0.3.49/gromacs/5.1.4-s
+
+--------------------------- /LUSTRE/yoltla/modules/ ----------------------------
+abinit/8.4.1                 namd/2.13
+amber/ambertools19           namd/2.13-CUDA
+.                            .
+.                            .
+.                            .
+namd/2.12-CUDA               wien2k/19.1
+namd/2.12-GIT-CUDA           xtb/6.2.3
+```
+
+```admonish warning title="IMPORTANTE"
+Para hacer uso de los módulos del clúster es necesario cargarlos.
+```
+
+## Cargar un módulo
+
+Para cargar un módulo, utilice el comando `module` seguido del subcomando `load` y el 
+nombre del módulo a cargar:
+```
+module load <módulo>
+```
+
+Al utilizar este comando no obtendrá ningún mensaje por parte del sistema.
+
+Por ejemplo, para cargar el modulo *intel/impi-2017u4*, ejecute el comando:
+```
+[pepe@yoltla0 ~]$ module load intel/impi-2017u4
+```
+
+```admonish note title="NOTA"
+Los módulos sólo se cargan en la sesión actual del usuario.
+```
+
+## Listar los módulos cargados
+
+Para listar todos los módulos cargados, utilice el comando `module` seguido del subcomando `list`:
+```
+module list
+```
+Por ejemplo, el usuario pepe tiene cargados los siguientes módulos:
+```
+[pepe@yoltla0 ~]$ module list
+Currently Loaded Modulefiles:
+  1) /intel/compilers-2017u4
+  2) /python/intel/2.7
+  3) /singularity/evolinc-i/5.0
+```
+
+```admonish note title="NOTA"
+En caso de no tener módulos cargados obtendrá el siguiente mensaje por parte del sistema:
+
+    No Modulefiles Currently Loaded.
+```
+
+## Descargar un módulo
+
+Para descarga un módulo, utilice el comando `module` seguido del subcomando `unload` y 
+el nombre del módulo a descargar:
+```
+module unload <módulo>
+```
+Al utilizar este comando no obtendrá ningún mensaje por parte del sistema.
+
+Por ejemplo, para descargar el módulo *intel/impi-2017u4*, ejecute el comando:
+```
+[pepe@yoltla0 ~]$ module unload intel/impi-2017u4
+```
+
+## Descargar todos los módulos cargados
+
+Para descargar todos los módulos cargados, utilice el comando `module` seguido del 
+subcomando `purge`:
+```
+module purge
+```
+
+Al utilizar este comando no obtendrá ningún mensaje por parte del sistema.
+
+Por ejemplo, el usuario pepe tiene cargados los siguientes módulos:
+```
+[pepe@yoltla0 ~]$ module list
+Currently Loaded Modulefiles:
+  1) /intel/compilers-2017u4
+  2) /python/intel/2.7
+  3) /singularity/evolinc-i/5.0
+```
+
+Al ejecutar el comando:
+```
+[pepe@yoltla0 ~]$ module purge
+```
+
+Y volver a comprobar los módulos cargados, se obtiene el siguiente mensaje:
+```
+[pepe@yoltla0 ~]$ module list
+No Modulefiles Currently Loaded.
+```
+
+**Actividad**
+
+
 
 # Cuota de discos?
 
 # Eficiencia Computacional
+
+En computación de alto rendimiento, cuando paralelizamos un programa 
+(correr con varios CPUs), queremos saber si realmente estamos obteniendo 
+una mejora significativa.
+
+Para esto se utilizan doms métricas fundamentales
+* **SpeedUp**
+
+* **Eficiencia**
+
+## SpeedUp
+
+El SpeedUp mide cuánto más rápido corre un programa al usar múltiples CPUs en comparación con una sola CPU.
+
+La fórmula es:
+
+<center>
+
+   ![SpeedUp](./images/speedup.png)
+   
+</center>
+
+donde: 
+   * T1 = tiempo de ejecución con 1 CPU
+   * Tn = timepo de ejecución con N CPU
+
+Que se interpreta de la siguiente manera:
+* *SpeedUP* = 1, No hay mejora
+* *SpeedUp* = 2, El programa es el doble de rápido
+* *SpeedUp ideal* = N, (lineal)
+
+>**Ejemplo**
+>
+>   Si un programa tarda:
+>   * 100 segundos con 1 CPU
+>   * 30 segundso con 4 CPUs
+>
+>   entonces:
+>
+>   <center>
+>
+>   ![Ejemplo SpeedUp](./images/speedup_ejemplo.png)
+>
+>   </center>
+>
+>   Signifiaca que con 4 CPUs corre **3.33** veces más rápido
+
+## Eficiencia
+
+La *Eficiencia* mide qué tan bien se usan las CPUs adicionales.
+
+Se calcula como:
+
+<center>
+
+   ![Eficiencia](./images/eficiencia.png)
+
+</center>
+
+donde:
+* *N* = número total de CPUs utilizadas.
+
+>**Ejemplo**
+>
+>Retomando el ejemplo anterior:
+>
+>SpeesUp = 3.33 con 4 CPUS. 
+>
+><center>
+>
+>   ![Eficiencia ejemplo](./images/eficiencia_ejemplo.png)
+>
+></center>
+>
+>Que significa:
+>* El programa usa **83% de la capacidad paralela ideal.**
+>* El 17% restante se pierde por: 
+>    * Comunicación entre procesoso
+>    * operaciones secuenciales
+>    * sincronización
+>    * I/O, etc
+
+**Observación**
+
+El *SpeddUp* **JAMÁS** será perfecto, la comunicación entre procesos, la 
+sincronización y la parte secuencial del código limitan la *eficiencia.*
+
+# Uso de GPUS
 
 # Dudas
 
