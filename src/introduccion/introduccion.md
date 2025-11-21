@@ -11,45 +11,62 @@
     * 48 CPUs
     * 94 GB RAM
 
+<center>
+
 ![Nodos yoltla](./images/nodos_yoltla/login_yoltla.png)
+</center>
 
 ****************************************************************************************************
 
-## Nodos nc
+## Nodos NC
 * 140 Nodos
     * Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz
     * 20 CPUs
-    * 62 GB RAM
+    * 64 GB RAM
+<center>
 
 ![Nodos nc](./images/nodos_yoltla/nc_yoltla.png)
+</center>
 
 ****************************************************************************************************
 
-## Nodos ncz
+## Nodos NCZ
 * 24 Nodos
-    * AMD EPYC 7513 32-Core Processor
+    * AMD EPYC 7513 32-Core Processor @ 2.6GHz
     * 64 CPUs
-    * 500 GB RAM
+    * 512 GB RAM
+<center>
 
 ![Nodos ncz](./images/nodos_yoltla/ncz_yoltla.png)
+</center>
 
 ****************************************************************************************************
 
-## Nodos ngk
+## Nodos NGK
+**FALTA INFORMACIÓN**
+
+<center>
+
+![Nodos ngk](./images/nodos_yoltla/ngk_yoltla.png)
+</center>
 
 ****************************************************************************************************
 
-## Nodos tt
+## Nodos TT
 * 104 Nodos 
     * Intel(R) Xeon(R) CPU E5-2660 v3 @ 2.60GHz
     * 20 CPUs
-    * 125 GB RAM
+    * 128 GB RAM
+<center>
 
 ![Nodos tt](./images/nodos_yoltla/tt_yoltla.png)
+</center>
 
 ****************************************************************************************************
 
-## Nodos gpu
+## Nodos GPU
+
+**FALTA INFORMACIÓN**
 
 ****************************************************************************************************
 
@@ -57,7 +74,7 @@
 
 ![Clúster yoltla](./images/nodos_yoltla/yoltla.png)
 
-Descripción de los nodos de procesamiento
+
 
 ****************************************************************************************************
 
@@ -134,15 +151,15 @@ de computación de alto rendimiento (HPC).
 
 Características principales:
 
-* Gestor de colas: Organiza y planifica la ejecución de trabajos
-* Administrador de recursos: Asigna CPU, memoria, GPU y otros recursos
-* Escalable: Soporta desde pequeños clusters hasta supercomputadoras
-* Tolerante a fallos: Capaz de recuperarse de fallos del sistema
+* **Gestor de colas:** Organiza y planifica la ejecución de trabajos.
+* **Administrador de recursos:** Asigna CPU, memoria, GPU y otros recursos.
+* **Escalable:** Soporta desde pequeños clusters hasta supercomputadoras.
+* **Tolerante a fallos:** Capaz de recuperarse de fallos del sistema.
 
 **Componentes clave:**
 
-* srun: Para lanzar trabajos paralelos
-* sbatch: Para enviar trabajos por lotes
+* **srun:** Para lanzar trabajos paralelos.
+* **sbatch:** Para enviar trabajos por lotes.
 
 ****************************************************************************************************
 
@@ -151,7 +168,7 @@ Características principales:
 
 ## sinfo - Información del estado del cluster 
 
-**sinfo** muestra información sobre los nodos y particiones del cúster. Con esta 
+`sinfo` muestra información sobre los nodos y particiones del cúster. Con esta 
 herramienta se puede consultar el estado de los recursos disponibles, como CPUs, 
 memoria, tiempo máximo de ejecución y disponibilidad de los nodos.
 
@@ -308,7 +325,9 @@ que ya se ejecutaron o se están ejecutando.
     # Sintaxis básica
     sacct [opciones]
 ```
-Ejemplo de salida típica:
+
+Al ejecutar `sacct` sin parametros, se mostrará información similar a la 
+siguiente: 
 ```bash
        JobID    JobName  Partition    Account  AllocCPUS  State  ExitCode
 ------------ ---------- ---------- ---------- ---------- ------- --------
@@ -444,7 +463,7 @@ en la línea de comando.
 ```admonish warning title="Importante"
 Sólo se utiliza el parámetro 
 
-    --cpus-per-task=
+    --cpus-per-task=#
 
 Cuando el trabajo usa memoria compartida (OpenMP).
 ```
@@ -502,9 +521,9 @@ Es un comando de la utilidad del gestor de trabajos de clúster. Se utiliza para
 ejecutar trabajos en paralelo o de forma interactiva. 
 
 * Puede ejecutar directamente programas en paralelo, sin necesidad de un script de trabajo.
-* uede lanzar tareas dentro de un trabajo que ya ha sido asignado con `sbatch`.
+* `srun` es síncrono y espera a que el trabajo termine para devolver el control al usuario.
 
-`srun` es síncrono y espera a que el trabajo termine para devolver el control al usuario.
+
 
 ```bash
     # Sintáxis básica
