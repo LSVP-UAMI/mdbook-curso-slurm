@@ -246,7 +246,7 @@ en ejecución dentro del clúster.
     squeue [opciones]
 ```
 
-Al ejecutar `squeue` sin parametros, se mostrará información similar a la 
+Al ejecutar `squeue` sin parámetros, se mostrará información similar a la 
 siguiente: 
 
 
@@ -326,7 +326,7 @@ que ya se ejecutaron o se están ejecutando.
     sacct [opciones]
 ```
 
-Al ejecutar `sacct` sin parametros, se mostrará información similar a la 
+Al ejecutar `sacct` sin parámetros, se mostrará información similar a la 
 siguiente: 
 ```bash
        JobID    JobName  Partition    Account  AllocCPUS  State  ExitCode
@@ -426,7 +426,7 @@ Los principales subcomandos se muestran en la siguiente tabla.
 
 # Parámetros de Slurm
 
-Indican qué recursos necesita tu trabajo: número de nodos, CPUs, memoria, 
+Indican qué recursos necesita un trabajo: número de nodos, CPUs, memoria, 
 tiempo, partición, etc.
 
 Se pueden especificar de dos maneras:
@@ -443,8 +443,8 @@ Se pueden especificar de dos maneras:
     srun -N 2 -n 8 -t 10 ./mi_programa
 ```
 
-Ambos casos son equivalentes: las opciones `#SBATCH` son los mismos parámetros que usarías 
-en la línea de comando.
+Ambos casos son equivalentes: las opciones `#SBATCH` son los mismos parámetros que se usarián 
+en la línea de comandos.
 
 ## Principales parámetros de Slurm
 
@@ -505,8 +505,8 @@ Cuando el trabajo usa memoria compartida (OpenMP).
 
 | **Parámetro** | - | **Descripción** | **Ejemplo** |
 |---------------|---|-----------------|-------------|
-| `--output` | `-o` | Archivo donde guardar la salida estándar (stdout). | #SBATCH -o salida.out |
-| `--error` | `-e` | Archivo donde guardar los errores (stderr). | #SBATCH -e errores.log |
+| `--output` | `-o` | Archivo donde guardar la salida estándar (stdout). | #SBATCH -o salida_%j.out |
+| `--error` | `-e` | Archivo donde guardar los errores (stderr). | #SBATCH -e errores_%j.log |
 | `--job-name` | `-J` | Nombre del trabajo. | #SBATCH -J simulacion | 
 | `--mail-user` | | Correo del usuario para notificaciones. | #SBATCH --mail-user=usuario@dominio.com |
 | `--mail-type` | |	Cuándo enviar correo (`BEGIN`, `END`, `FAIL`, `ALL`). | #SBATCH --mail-type=END,FAIL |
@@ -530,26 +530,21 @@ ejecutar trabajos en paralelo o de forma interactiva.
     srun [opciones] <comando> 
 ```
 
-**Opciones más comunes**
-
-| **Opción** | **Descripción** | **Ejemplo** |
-|:----------:|:---------------:|:-----------:|
-| `-N <n>` | Número de nodos solicitados. | srun -N 2 hostname |
-| `-n <n>` | Número total de tareas (procesos). | srun -n 4 ./mi_programa |
-| `--ntasks-per-node=<n>` | Número de tareas por nodo. | srun -N 2 --ntasks-per-node=2 ./mi_programa |
-| `-c <n>` | Núcleos (CPUs) por tarea. | srun -n 4 -c 2 ./mi_programa | 
-| `-t <min>` | Tiempo máximo de ejecución. | srun -t 10 ./mi_programa |
-| `-p <partición>` | Especifica la partición (cola) de Slurm. | srun -p gpu ./mi_programa |
-| `--mem=<memoria>` | Solicita memoria por nodo o tarea. | srun --mem=2G ./mi_programa |
-
 `srun` puede iniciar trabajos o pasos de trabajos dentro de una asignación de recursos existente, 
+
+**Ejemplo**
 ```bash
-[pepe@nc56 ~]$ srun -N 1 --ntasks-per-node=4 --mem-per-cpu=1gb -t 1:00:00 -p interactive comando 
+[pepe@nc56 ~]$ srun -p q4d-20p -N 1 -c 4 -t 10 <comando>
+[pepe@nc56 ~]$ srun --partition q4d-20p --nodes 1 --cpus-per-tasks = 4 --time=00:10:00 <comando>
 
 ```
 
 
->**ACTIVIDAD**
+><center>
+>
+>**Actividad**
+>
+></center>
 >
 >Ejecuta el comando `hostname` en la partición `q1` con `srun`: 
 >* Con un único proceso.
@@ -578,7 +573,7 @@ El script debe contener, al inicio, los parámetros de `slurm`:
 #SBATCH --job-name=nombre_trabajo
 #SBATCH --outpu=salida_%j.out
 #SBATCH --error=error_%J.err
-#SBATCH --PARTITION=nombre_prtición
+#SBATCH --partition=nombre_prtición
 #SBATCH --ntask=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
@@ -588,11 +583,15 @@ El script debe contener, al inicio, los parámetros de `slurm`:
 .
 ```
 
-Después de enviar un tranajo, obtendremos una salida similar a la siguiente:
+Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 ```bash
     submitted batch job 12345
 ```
+><center>
+>
 >**Actividad**
+>
+></center>
 >
 >Usaremos el comando `yes` que repite indefinidamente una cadena y 
 >puede consumir el 100% de CPU. 
@@ -601,10 +600,10 @@ Después de enviar un tranajo, obtendremos una salida similar a la siguiente:
 >```bash
 >#!/bin/bash
 >
->#SBATCH -J cpu_test
->#SBATCH -t 5
->#SBATCH -o salida_%j.out
->#SBATCH -e error_%j.out
+>
+>#SBATCH --output=salida_%j.out
+>#SBATCH --error=error_%j.out
+>#SBATCH --time=10:30
 >
 >echo "Inicio de la prueba en :$(hostname)"
 >echo "Hora de inicio: $(date)"
@@ -620,20 +619,21 @@ Después de enviar un tranajo, obtendremos una salida similar a la siguiente:
 >* Se ejecute en la partición `q1`.
 >* Se ejecute en una sola tarea (proceso).
 >* Solicita un único núcleo (threads).
+>* Envíe una notificación a tu correo cuando inicie el trabajo.
 >
->Manda el scrip a la cola y contesta lo siguiente:
+>Ejecuta el scrip y contesta lo siguiente:
 >* ¿Qué comando puedo usar para ver información del trabajo 
->en ejecución? (squeue -u $USER)
+>en ejecución?
 >
->* ¿Cómo puedo cancelar mi trabajo? (scancel jobID)
+>* ¿Cómo puedo cancelar mi trabajo?
 >
 >* ¿Qué comando me permite conocer el estado de las particiones del 
->clúster? (sinfo)
+>clúster?
 >
->* ¿Cuánto tiempo estará la tarea en ejecución si no la cancelo? (Hasta >que alcance el límite de tiempo (-t 5) o sea cancelada manualmente)
+>* ¿Cuánto tiempo estará el trabajo en ejecución si no la cancelo?
 >
 >
->
+
 # Htop
 
 # Reserva de memoria RAM
@@ -769,8 +769,34 @@ Y volver a comprobar los módulos cargados, se obtiene el siguiente mensaje:
 No Modulefiles Currently Loaded.
 ```
 
-**Actividad**
-
+><center>
+>
+>**Actividad**
+>
+></center>
+>
+>Descarga el Archivo `suma_lista.py` y crea un scritp que tenga lo siguiente:
+>
+>* Asignale un nombre al trabajo
+>* Se ejecute en la partición q1.
+>* Cada trabajo reserva un único core.
+>* Crea archivo de salida y error con el ID del trabajo.
+>* El tiempo máximo de ejecución sea 5 minutos.
+>* Descargue todos los módulos.
+>* Cargue el modulo py.
+>
+>Agrega lo siguiente al final del script y ejeucta el script.
+>
+>```bash
+>echo "iniciando trabajo en$(hostname)"
+>echo "Hora de inicio: $(date)"
+>
+>python3 suma_lista.py
+>
+>echo " "
+>echo "Hora de finalización: $(date)"
+>```
+>
 
 
 # Cuota de discos?

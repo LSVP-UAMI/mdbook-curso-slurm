@@ -20,14 +20,11 @@ Actividad 2
 
 $SBATCH --job-name=cpu_test
 #SBATCH --partition=q1
-#SBATCH --nodes=1
-#SBATCH --cpus-per-task=1
+#SBATCH
 
 #SBATCH --output=salida_%j.out
 #SBATCH --error=error_%j.out
 #SBATCH --time=02:30
-#SBATCH --mail-user=tu-correo
-$SBATCH --mail-type=BEGIN
 
 echo "Inicio de la prueba en :$(hostname)"
 echo "Hora de inicio: $(date)"
@@ -45,7 +42,6 @@ Completa el script base para que:
     Se ejecute en la partición q1.
     Se ejecute en una sola tarea (proceso).
     Solicita un único núcleo (threads).
-    Envíe una notificación tu correo cuando inicie el trabajo
 
 Manda el scrip a la cola y contesta lo siguiente:
 
