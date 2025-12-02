@@ -450,15 +450,15 @@ en la línea de comandos.
 
 ### Recursos computacionales
 
-| **Parámetro** |-|  **Descripción** | **Ejemplo** |
-|:-------------:|-|-----------------|-------------|
-| `--nodes` | `-N` | Número de nodos solicitados. | #SBATCH -N 2 |
-| `--ntasks` | `-n` | Número total de tareas (procesos) | #SBATCH -n 8 | 
-| `--ntasks-per-node` | |	Tareas por nodo. | #SBATCH --ntasks-per-node=4 | 
-| `--cpus-per-task` | `-c` | Núcleos (threads) por tarea. | #SBATCH -c 2 |
-| `--partition` | `-p` | Cola o partición donde ejecutar el trabajo. | #SBATCH -p gpu |
-| `--gpus` | | Número de GPUs solicitadas. | #SBATCH --gpus=1 |
-| `--gres` | | Recursos genéricos (por ejemplo GPUs, licencias). | #SBATCH --gres=gpu:2 | 
+
+| <div style="width:190px"> **Parámetro** </div>| **Descripción** | **Ejemplo** |
+|:---------------------------------------------:|-----------------|-------------|
+| `--nodes=#`,<br/>`-N #` | Número de nodos solicitados. | #SBATCH -N 2 |
+| `--ntasks=#`,<br/>`-n #` | Número total de tareas (procesos) | #SBATCH --ntasks=8 | 
+| `--ntasks-per-node=#` |	Tareas por nodo. | #SBATCH --ntasks-per-node=4 | 
+| `--cpus-per-task=#`,<br/>`-c #` | Núcleos (threads) por tarea. | #SBATCH -c 2 |
+| `--partition=partición`,<br/>`-p partición` | Cola o partición donde ejecutar el trabajo. | #SBATCH -p normal |
+| `--gpus=#` | Número de GPUs solicitadas. | #SBATCH --gpus=1 |
 
 ```admonish warning title="Importante"
 Sólo se utiliza el parámetro 
@@ -495,21 +495,21 @@ Cuando el trabajo usa memoria compartida (OpenMP).
 
 ### Tiempo y prioridad
 
-| **Parámetro** | - | **Descripción** | **Ejemplo** |
-|---------------|---|-----------------|-------------|
-| `--time` | `-t` | Tiempo máximo de ejecución. Formato: min o HH:MM:SS. | #SBATCH -t 30 o #SBATCH -t 01:00:00 |
-| `--nice` | | Cambia la prioridad del trabajo (valor alto = menor prioridad). | #SBATCH --nice=100 | 
+| **Parámetro** | **Descripción** | <div style="width:190px"> **Ejemplo** <div/> |
+|:-------------:|-----------------|----------------------------------------------|
+| `--time`,<br/>`-t` | Tiempo máximo de ejecución. Formato: min o HH:MM:SS. | #SBATCH -t 60<br/>#SBATCH -t 02:00:00<br/>#SBATCH -t 1-12:35:30 |
+| `--nice` | Cambia la prioridad del trabajo (valor alto = menor prioridad). | #SBATCH --nice=100 | 
 
 
 ### Archivos de salida
 
-| **Parámetro** | - | **Descripción** | **Ejemplo** |
-|---------------|---|-----------------|-------------|
-| `--output` | `-o` | Archivo donde guardar la salida estándar (stdout). | #SBATCH -o salida_%j.out |
-| `--error` | `-e` | Archivo donde guardar los errores (stderr). | #SBATCH -e errores_%j.log |
-| `--job-name` | `-J` | Nombre del trabajo. | #SBATCH -J simulacion | 
-| `--mail-user` | | Correo del usuario para notificaciones. | #SBATCH --mail-user=usuario@dominio.com |
-| `--mail-type` | |	Cuándo enviar correo (`BEGIN`, `END`, `FAIL`, `ALL`). | #SBATCH --mail-type=END,FAIL |
+|<div style="width:230px"> **Parámetro** <div/> | **Descripción** | **Ejemplo** |
+|:---------------------------------------------:|-----------------|-------------|
+| `--output='salida'.out`,<br/>`-o` | Archivo donde guardar la salida estándar (stdout). | #SBATCH -o salida_%j.out |
+| `--error='error'.log`,<br/>`-e` | Archivo donde guardar los errores (stderr). | #SBATCH --error=<br/>error_%j.log |
+| `--job-name='nombre'`,<br/>`-J 'nombre'` | Nombre del trabajo. | #SBATCH -J simulacion | 
+| `--mail-user='correo'` | Correo del usuario para notificaciones. | #SBATCH --mail-user=<br/>usuario@dominio.com |
+| `--mail-type='notificación'` | Cuándo enviar correo (`BEGIN`, `END`, `FAIL`, `ALL`). | #SBATCH --mail-type=<br/>END,FAIL |
 
 ```admonish success title=" "
 - `%j` inserta el ID del trabajo automáticamente.
@@ -534,11 +534,10 @@ ejecutar trabajos en paralelo o de forma interactiva.
 
 **Ejemplo**
 ```bash
-[pepe@nc56 ~]$ srun -p q4d-20p -N 1 -c 4 -t 10 <comando>
+[pepe@nc56 ~]$ srun -p q4d-20p -N 1 -c 4 -t 10:00 <comando>
 [pepe@nc56 ~]$ srun --partition q4d-20p --nodes 1 --cpus-per-tasks = 4 --time=00:10:00 <comando>
 
 ```
-
 
 ><center>
 >
@@ -636,9 +635,70 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 
 # Htop
 
-# Reserva de memoria RAM
+# Memoria RAM en Yoltla
 
-Cuanta memoria RAM se reserva por core por defecto en slurm?
+El clúster **Yoltla** esta configurado para que no sea obligatorio reservar 
+memoria explícita en los scripts de ejecución. Esto significa que los 
+trabajos pueden acceder a la memoria total disponible del nodo sin 
+necesidad de especificarla en parámetros como `--mem` o `--mem-per-cpu.`
+
+<!--
+En algunos clusters configurados con Slurm, no es obligatorio reservar 
+memoria explícita en los scripts de ejecución. Esto significa que los 
+trabajos pueden acceder a la memoria total disponible del nodo sin 
+necesidad de especificarla en parámetros como `--mem` o `--mem-per-cpu.`
+-->
+
+En este tipo de configuración, Slurm no aplica límites estrictos de 
+memoria por trabajo. Cada usuario puede usar toda la memoria física 
+del nodo siempre y cuando esté libre al momento de ejecutarse su trabajo. 
+
+**Debo preocuparme por la memoria?**
+
+Que el sistema no obligue a definir memoria en el script no significa 
+que el uso de memoria sea irrelevante. Un trabajo que use más memoria 
+de la disponible puede causar:
+
+* Fallos por Out of Memory (OOM).
+* Terminación abrupta de procesos.
+* Impacto en otros usuarios del nodo.
+* Ineficiencia del cluster.
+
+**Uso responsable de memoria**
+
+* Conoce le consumo típico de tus aplicacions 
+    * Programas cientifics como `MATLAB`, `R` o `Python` con grandes matrices
+    suelen requerir varios GBs de memoria.
+
+* Pruebas con *datasets* pequeños
+    * Antes de lanzar un trabajo grande, ejecuta versiones reducidas
+    para estimar tiempo y memoria usada.
+
+* Monitorea el uso de memorio durante la ejecución
+    * Utiliza herraminetas como: 
+        * top
+        * htop
+        * seff JOBID
+        * sacct -j JOBID --format=JobID,MaxRSS,Elapsed
+    * Esto te permite conocer cuánta memoria utiliza el trabajo
+
+**Especificar memoria explícitamente?**
+
+En clusters donde no es obligatorio, aún podrías querer hacerlo para proteger 
+tu trabajo de procesos que podrían competir por recursos en el mismo nodo. Por ejemplo:
+
+```
+    #SBATCH --mem=8G
+```
+
+Esto le dice a Slurm que tu trabajo requiere al menos 8 GB y puede evitar que
+se ejecute en nodos sin esa memoria disponible.
+
+# htop
+
+
+
+*********************************************************
 
 # Aplicaciones del clúster
 
@@ -777,15 +837,15 @@ No Modulefiles Currently Loaded.
 >
 >Descarga el Archivo `suma_lista.py` y crea un scritp que tenga lo siguiente:
 >
->* Asignale un nombre al trabajo
->* Se ejecute en la partición q1.
+>* Asignar un nombre al trabajo
+>* Se ejecute en la partición `q1`.
 >* Cada trabajo reserva un único core.
 >* Crea archivo de salida y error con el ID del trabajo.
 >* El tiempo máximo de ejecución sea 5 minutos.
 >* Descargue todos los módulos.
 >* Cargue el modulo py.
 >
->Agrega lo siguiente al final del script y ejeucta el script.
+>Agrega lo siguiente al final y ejeucta el script.
 >
 >```bash
 >echo "iniciando trabajo en$(hostname)"
@@ -898,3 +958,7 @@ sincronización y la parte secuencial del código limitan la *eficiencia.*
     - Lmod
     - Cuota de discos
     - Uso de particiones GPUs
+
+
+
+
