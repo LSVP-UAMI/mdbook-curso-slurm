@@ -87,3 +87,44 @@ mi_tarea.sh
     * asigna nombre a la tarea 
     * ejecute ./mi_tarea.sh
     
+
+
+*****************************************************
+
+    htop
+
+Primeras líneas te muestran el numero de procesadores, seguido de la carga
+de memoria RAM (Mem) y la memoria virtual utilizada (Swp)
+
+Posteriormente se muestra el total de procesos corriendo (tasks), el total
+de threads (hilos) de usuario (thr), el total de threads (hilos) del núcleo
+o kernel (kthr), el nivel de carga, y el tiempo que lleva el sistema iniciado
+
+Después se observa informacion de cada proceso que esta corriendo:
+
+    PID: Número que identifica al proceso
+    USER: Usuario que ejecutó el proceso
+    PRI: Prioridad
+    NI: Nivel de prioridad(nice)
+    VIRT: Cantidad de memoria virtual utilizada (swap)
+    RES: Memoria RAM en megabytes
+    SHR: Memoria compartida utilizada
+    S: Estado del proceso (Sleeping, Zonbie, Running)
+    CPU%: Porcentaje de CPU utilizada (procesador)
+    MEM%: Porcentaje de memoria RAM utilizada
+    TIME+: Tiempo de vida del proceso
+    Command: Comando utilizado para lanzar el proceso
+
+En la línea inferior vemos las posibilidades de interacción
+
+    F1: Ayuda, explicación del uso de htop
+    F2 Setup: Opciones de configuración de top, se pueden cambiar los números por gráficos,
+    el orden de las columnas, etc.
+    F3 Search: Buscador de procesos.
+    F4 Filter: Podemos filtrar por texto, útil cuando hay muchos procesos o buscamos por alguno.
+    F5 Tree: Organiza procesos en árbol a partir de su "padre"
+    F6 SortBy: Ordenar por columna seleccionada
+    F7 Nice-: Disminuir el Nice o prioridad de ejecución. (se reflejan los cambios en la columna NI)
+    F8 Nice+: Aumenta el Nice o prioridad de ejecución. (se reflejan los cambios en la columna NI)
+    F9 Kill: Mata el proceso seleccionado en pantalla
+    F10 Quit: salir de htop

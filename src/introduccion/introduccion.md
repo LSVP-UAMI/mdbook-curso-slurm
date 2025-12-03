@@ -1,7 +1,11 @@
 # Clúster Yoltla
 
-## **Información?**
 ![Clúster Yoltla](./images/yolta.jpg)
+
+El cluster `Yoltla`, cuyo nombre deriva del vocablo náhuatl ***Yoltlamaltini*** 
+y que significa ***“semillero del saber o conocimiento”*** pertenece al Laboratorio 
+de Supercómputo y Visualización en Paralelo (LSVP) de la Universidad Autónoma 
+Metropolitana, Unidad Iztapalapa.
 
 # Infraestructura
 
@@ -71,13 +75,14 @@
 ****************************************************************************************************
 
 ## Clúster Yoltla
+<center>
 
-![Clúster yoltla](./images/nodos_yoltla/yoltla.png)
+![Clúster yoltla1](./images/nodos_yoltla/c_yoltla1.png)
 
-
+![Clúster yoltla2](./images/nodos_yoltla/c_yoltla2.png)
+</center>
 
 ****************************************************************************************************
-
 
 # Accediendo al clúster
 
@@ -633,8 +638,6 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 >
 >
 
-# Htop
-
 # Memoria RAM en Yoltla
 
 El clúster **Yoltla** esta configurado para que no sea obligatorio reservar 
@@ -653,7 +656,7 @@ En este tipo de configuración, Slurm no aplica límites estrictos de
 memoria por trabajo. Cada usuario puede usar toda la memoria física 
 del nodo siempre y cuando esté libre al momento de ejecutarse su trabajo. 
 
-**Debo preocuparme por la memoria?**
+## Debo preocuparme por la memoria?
 
 Que el sistema no obligue a definir memoria en el script no significa 
 que el uso de memoria sea irrelevante. Un trabajo que use más memoria 
@@ -664,7 +667,7 @@ de la disponible puede causar:
 * Impacto en otros usuarios del nodo.
 * Ineficiencia del cluster.
 
-**Uso responsable de memoria**
+## Uso responsable de memoria
 
 * Conoce le consumo típico de tus aplicacions 
     * Programas cientifics como `MATLAB`, `R` o `Python` con grandes matrices
@@ -682,7 +685,7 @@ de la disponible puede causar:
         * sacct -j JOBID --format=JobID,MaxRSS,Elapsed
     * Esto te permite conocer cuánta memoria utiliza el trabajo
 
-**Especificar memoria explícitamente?**
+## Especificar memoria explícitamente?
 
 En clusters donde no es obligatorio, aún podrías querer hacerlo para proteger 
 tu trabajo de procesos que podrían competir por recursos en el mismo nodo. Por ejemplo:
@@ -696,7 +699,10 @@ se ejecute en nodos sin esa memoria disponible.
 
 # htop
 
+<center>
 
+![htop](./images/htop.png)
+</center>
 
 *********************************************************
 
