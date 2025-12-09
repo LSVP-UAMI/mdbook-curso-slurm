@@ -1,14 +1,19 @@
 #!/bin/bash
+    
 #SBATCH --job-name=sumlist
-#SBATCH --output=sumlist-%j.out
-#SBATCH --partition=slims
+#SBATCH --partition=q1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=2300M
-#SBATCH --time=00:10:00
+#SBATCH --output=salida_%j.out
+#SBATCH --error=error_%j.out
+#SBATCH --time=00:05:00
 
-echo "Job started on $(hostname)"
-echo "Loading Python 3.9.5..."
-module load Python/3.9.5
+module purge
+module load python/3.12
 
-echo "Running Python script..."
-python3 sum-large-list.py
+echo "iniciando trabajo en$(hostname)"
+echo "Hora de inicio: $(date)"
+
+python3 suma_lista.py
+
+echo " "
+echo "Hora de finalización: $(date)"

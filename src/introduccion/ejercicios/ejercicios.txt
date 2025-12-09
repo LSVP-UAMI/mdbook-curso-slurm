@@ -12,36 +12,56 @@ Actividad 1
     Lanzando un proceso que tenga dos cores reservados. --> $ srun -p q1 -n 1 --cpus-per-task=2 hostname
                                                         --> $ srun -p q1 -n 1 -c 2 hostname
 
+    *********************************************
+    ¿Cuantas veces se ejecuta hostname si solicitas 3 nodos y un soló proceso?
+        ($ srun -p q1 -N 3 -n 1 hostname) 
+        Verificalo
 
+    Cual es la diferencia entre:
+        - $ srun -p q1 -N 1 -n 1 hostname
+        - $ srun -p q1 -n 1 -c 2 hostname
+
+    *********************************************
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Actividad 2
 
-#!/bin/bash
+cpu_test.sh
 
-$SBATCH --job-name=cpu_test
-#SBATCH --partition=q1
-#SBATCH
+    #!/bin/bash
 
-#SBATCH --output=salida_%j.out
-#SBATCH --error=error_%j.out
-#SBATCH --time=02:30
+    #SBATCH --job-name=cpu_test
+    #SBATCH --partition=q1
+    #SBATCH --ntasks=1
+    #SBATCH --cpus-per-task=1
+    #SBATCH --mail-user=omar4jrz@gmail.com
+    #SBATCH --mail-type=BEGIN
 
-echo "Inicio de la prueba en :$(hostname)"
-echo "Hora de inicio: $(date)"
+    #SBATCH --output=salida_%j.out
+    #SBATCH --error=error_%j.out
+    #SBATCH --time=03:00
 
-# Ejecuta una tarea que ocupa el 100% de CPU.
-yes > /dev/null
+    echo "Inicio de la prueba en :$(hostname)"
+    echo "Hora de inicio: $(date)"
 
-echo "Hora de finalización: $(date)"
+    # Ejecuta una tarea que ocupa el 100% de CPU.
+    yes > /dev/null
+
+    echo "Hora de finalización: $(date)"
 
 
 
 Completa el script base para que:
 
-    El nombre del trabajo sea cpu_test
-    Se ejecute en la partición q1.
-    Se ejecute en una sola tarea (proceso).
-    Solicita un único núcleo (threads).
+    El nombre del trabajo sea cpu_test --> $SBATCH --job-name=cpu_test
+    Se ejecute en la partición q1. --> --partition=q1
+    Se ejecute en una sola tarea (proceso). --> #SBATCH --ntasks=1
+    Solicita un único núcleo (threads). --> #SBATCH --cpus-per-task=1
+    Envie una notificación a tu correo cuando inicie el trabajo
+        - #SBATCH --mail-user=omar4jrz@gmail.com
+        - #SBATCH --mail-type=BEGIN
+
 
 Manda el scrip a la cola y contesta lo siguiente:
 
@@ -51,9 +71,46 @@ Manda el scrip a la cola y contesta lo siguiente:
 
     ¿Qué comando me permite conocer el estado de las particiones del clúster? (sinfo)
 
-    ¿Cuánto tiempo estará la tarea en ejecución si no la cancelo? (Hasta >que alcance el límite de tiempo (-t 5) o sea cancelada manualmente)
+    ¿Cuánto tiempo estará la tarea en ejecución si no la cancelo? (Hasta que alcance el límite de tiempo (-t 5) o sea cancelada manualmente)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Actividad 3
+
+suma.sh
+
+    #!/bin/bash
+    
+    #SBATCH --job-name=sumlist
+    #SBATCH --partition=q1
+    #SBATCH --cpus-per-task=1
+    #SBATCH --output=salida_%j.out
+    #SBATCH --error=error_%j.out
+    #SBATCH --time=00:05:00
+
+    module purge
+    module load python/3.12
+
+    echo "iniciando trabajo en$(hostname)"
+    echo "Hora de inicio: $(date)"
+
+    python3 suma_lista.py
+
+    echo " "
+    echo "Hora de finalización: $(date)"
 
 
+
+
+Asignar un nombre al trabajo --> #SBATCH --job-name=sumlist
+Se ejecute en la partición q1. --> #SBATCH --partition=q1
+Cada trabajo reserva un único core. --> #SBATCH --cpus-per-task=1
+Crea archivo de salida y error con el ID del trabajo.
+    - #SBATCH --output=salida_%j.out
+    - #SBATCH --error=error_%j.out
+El tiempo máximo de ejecución sea 5 minutos. --> #SBATCH --time=00:05:00
+Descargue todos los módulos. --> module purge
+Cargue el modulo py. --> module load python/3.12
 
 
 ------------------------------------------------------------------------------------------
@@ -83,3 +140,44 @@ mi_tarea.sh
     * asigna nombre a la tarea 
     * ejecute ./mi_tarea.sh
     
+
+
+*****************************************************
+
+    htop
+
+Primeras líneas te muestran el numero de procesadores, seguido de la carga
+de memoria RAM (Mem) y la memoria virtual utilizada (Swp)
+
+Posteriormente se muestra el total de procesos corriendo (tasks), el total
+de threads (hilos) de usuario (thr), el total de threads (hilos) del núcleo
+o kernel (kthr), el nivel de carga, y el tiempo que lleva el sistema iniciado
+
+Después se observa informacion de cada proceso que esta corriendo:
+
+    PID: Número que identifica al proceso
+    USER: Usuario que ejecutó el proceso
+    PRI: Prioridad
+    NI: Nivel de prioridad(nice)
+    VIRT: Cantidad de memoria virtual utilizada (swap)
+    RES: Memoria RAM en megabytes
+    SHR: Memoria compartida utilizada
+    S: Estado del proceso (Sleeping, Zonbie, Running)
+    CPU%: Porcentaje de CPU utilizada (procesador)
+    MEM%: Porcentaje de memoria RAM utilizada
+    TIME+: Tiempo de vida del proceso
+    Command: Comando utilizado para lanzar el proceso
+
+En la línea inferior vemos las posibilidades de interacción
+
+    F1: Ayuda, explicación del uso de htop
+    F2 Setup: Opciones de configuración de top, se pueden cambiar los números por gráficos,
+    el orden de las columnas, etc.
+    F3 Search: Buscador de procesos.
+    F4 Filter: Podemos filtrar por texto, útil cuando hay muchos procesos o buscamos por alguno.
+    F5 Tree: Organiza procesos en árbol a partir de su "padre"
+    F6 SortBy: Ordenar por columna seleccionada
+    F7 Nice-: Disminuir el Nice o prioridad de ejecución. (se reflejan los cambios en la columna NI)
+    F8 Nice+: Aumenta el Nice o prioridad de ejecución. (se reflejan los cambios en la columna NI)
+    F9 Kill: Mata el proceso seleccionado en pantalla
+    F10 Quit: salir de htop
