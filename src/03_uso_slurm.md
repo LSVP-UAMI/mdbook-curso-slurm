@@ -1,29 +1,22 @@
-# ¿Que es SLURM?
+# ¿Qué es SLURM?
 
-**SLURM** (Simple Linux Utility for Resource Management) es un sistema de 
-gestión de trabajos y recursos de código abierto utilizado en clusters 
-de computación de alto rendimiento (HPC).
+> **SLURM** (Simple Linux Utility for Resource Management) es un sistema de
+> gestión de trabajos y recursos de código abierto utilizado en clusters
+> de computación de alto rendimiento (HPC).
 
 Características principales:
 
-* **Gestor de colas:** Organiza y planifica la ejecución de trabajos.
-* **Administrador de recursos:** Asigna CPU, memoria, GPU y otros recursos.
-* **Escalable:** Soporta desde pequeños clusters hasta supercomputadoras.
-* **Tolerante a fallos:** Capaz de recuperarse de fallos del sistema.
+- **Gestor de colas:** Organiza y planifica la ejecución de trabajos.
+- **Administrador de recursos:** Asigna CPU, memoria, GPU y otros recursos.
 
-**Componentes clave:**
-
-* **srun:** Para lanzar trabajos paralelos.
-* **sbatch:** Para enviar trabajos por lotes.
-
-****************************************************************************************************
-
+---
 
 # Comandos principales de slurm
+## Para buscar información
 
-## sinfo - Información del estado del cluster 
+### sinfo - Información del estado del cluster
 
-`sinfo` muestra información sobre los nodos y particiones del cúster. Con esta 
+`sinfo` muestra información sobre los nodos y particiones del cluster. Con esta 
 herramienta se puede consultar el estado de los recursos disponibles, como CPUs, 
 memoria, tiempo máximo de ejecución y disponibilidad de los nodos.
 
@@ -89,19 +82,20 @@ Estados de los nodos:
         # %m = memoria
         # %G = grupos de GPU
 ```
-**************************************************************************
 
-## squeue - Estado de la cola de trabajos
+---
 
-El comando `squeue` muestra información sobre los trabajos en cola y 
-en ejecución dentro del clúster.
+### squeue - Estado de la cola de trabajos
+
+El comando `squeue` muestra información sobre los trabajos en cola
+y en ejecución dentro del clúster.
 
 ```bash
     # Sintaxis básica.
     squeue [opciones]
 ```
 
-Al ejecutar `squeue` sin parámetros, se mostrará información similar a la 
+Al ejecutar `squeue` sin parámetros, se mostrará información similar a la
 siguiente: 
 
 
@@ -109,16 +103,16 @@ siguiente:
     [pepe@yoltla0 ~]$ squeue
 
     JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-    696283      gpus pruebaGr   a.7350  R 1-13:54:33      1 ngk4
-    695490      gpus     M_R1   i.5519  R 3-14:29:39      1 ngk9
-    697438      gpus  T230KFu l.100038  R    9:04:47      1 ngk10
-    697519  q12h-80p prueba_q   i.5533 PD       0:00      4 (Resources)
-    697518   q1d-20p       M8  cedillo  R      44:57      1 nc112
-    697443   q1d-20p 3hit20wY     frml  R    2:46:52      1 nc113
-    697360  q1d-320p mgco3Bul      jgo PD       0:00     16 (Resources)
-    697286   q1d-40p corriend     insa  R    5:27:56      2 nc[39,42]
-    697509   q1h-20p BCTrpZ_c   a.7312  R      52:14      1 nc88
-    697508   q1h-20p BCTrpZ_c   a.7312  R      52:32      1 nc83
+    696283      gpus pruebaGr   a.xxxx  R 1-13:54:33      1 ngk4
+    695490      gpus     M_R1   i.xxxx  R 3-14:29:39      1 ngk9
+    697438      gpus  T230KFu l.100xxx  R    9:04:47      1 ngk10
+    697519  q12h-80p prueba_q   i.5xxx PD       0:00      4 (Resources)
+    697518   q1d-20p       M8  xedxxxx  R      44:57      1 nc112
+    697443   q1d-20p 3hit20wY     fxmx  R    2:46:52      1 nc113
+    697360  q1d-320p mgco3Bul      xxo PD       0:00     16 (Resources)
+    697286   q1d-40p corriend     xnxa  R    5:27:56      2 nc[39,42]
+    697509   q1h-20p BCTrpZ_c   a.xx1x  R      52:14      1 nc88
+    697508   q1h-20p BCTrpZ_c   a.xx1x  R      52:32      1 nc83
 ```
 
 En la siguiente tabla se da una descripción de los campos que conforman la 
@@ -171,14 +165,14 @@ Estados comunes de los trabajos:
 ```
 **************************************************************************
 
-## sacct - Información de trabajos completados
+### sacct - Información de trabajos completados
 
 `sacct` muestra información histórica o detallada sobre los trabajos 
 que ya se ejecutaron o se están ejecutando.
 
 ```bash
     # Sintaxis básica
-    sacct [opciones]
+    sacct -X [opciones]
 ```
 
 Al ejecutar `sacct` sin parámetros, se mostrará información similar a la 
@@ -194,60 +188,55 @@ siguiente:
 **Ejemlos de uso**
 ```bash
     # Información de trabajos de un suario.
-    sacct -u 'usuario'
+    sacct -Xu 'usuario'
     
     # Información de trabajos en un rango de fechas.
-    sacct -S 2024-01-01 -E 2024-01-02
+    sacct -XS 2024-01-01 -E 2024-01-02
     
     # Información detallada de un trabajo
-    sacct -j 12345 -o jobid,jobname,partition,account,alloccpus,state,exitcode
+    sacct -Xj 12345 -o jobid,jobname,partition,account,alloccpus,state,exitcode
     
     # Información de trabajos cancelados o fallidos
-    sacct -s CA,F
+    sacct -Xs CA,F
 ```
 -------------------------------------
 
-## scontrol - Control y configuración
+### scontrol - Información detallada de jobs
 
 
-`scontrol` es una herramienta administrativa y de diagnóstico que permite 
-ver y modificar el estado de varios elementos de Slurm:
-trabajos(`job`), nodos(`node`), particiones(`partition`), y más
+`scontrol` es una herramienta administrativa
+La mostramos aquí para un uso muy especifico.
 
 ```bash
-    # Sintaxis básica
-    scontrol [subcomando] [objeto] [argumentos]
+    scontrol -dd show job [jobid]
+```
+
+### seff - Eficiencia de un job ejecutado
+
+Muestra la eficiencia en el uso de recursos de un job
+
+Al ejecutar `seff` se muestra algo similar a esto
+```bash
+Job ID: 727454
+Cluster: yoltla
+User/Group: xdlexxa/xdlexxa
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 20
+CPU Utilized: 41-01:37:11
+CPU Efficiency: 99.97% of 41-01:55:40 core-walltime
+Job Wall-clock time: 2-01:17:47
+Memory Utilized: 635.57 MB
+Memory Efficiency: 0.00% of 16.00 B
 ```
 
 
-Los principales subcomandos se muestran en la siguiente tabla.
 
-| **Subcomando** | **Descripción** |
-|----------------|-----------------|
-| `show` | Muestra información detallada. |
-| `update` | Cambia atributos o estados. | 
-| `reconfigure` | Recarga la configuración de Slurm sin reiniciar. |
-| `ping` | Verifica si el `slurmctl` está respondiendo. |
-| `hold`/`release` | Suspende o libera trabajos en espera. |
-| `listpids` | Muestra los `PIDs` asociados a un trabajo. |
 
-**Ejemplos de uso**
-```bash
-    # Información de un trabajo.
-    scontrol show job 12346
 
-    # Información de un nodo.
-    scontrol show node nodo01
+---
 
-    # Liberar un nodo.
-    scontrol update nodoname=nodo01 state=RESUME
-
-    # Modificar parámetros de un trabajo.
-    scontrol update jobid=12345 TimeLimit=50:00
-```
-**************************************************************************
-
-## scancel - Cancelar trabajos
+### scancel - Cancelar trabajos
 
 `scancel` se usa para detener uno o varios trabajos en ejecución o pendientes.
 
@@ -277,7 +266,11 @@ Los principales subcomandos se muestran en la siguiente tabla.
     # Cancelar trabajos pendientes.
     scancel -t PENDING -u 'nombre_usuario'
 ```
-**************************************************************************
+
+---
+## Enviar jobs en SLURM
+
+---
 
 # Parámetros de Slurm
 
