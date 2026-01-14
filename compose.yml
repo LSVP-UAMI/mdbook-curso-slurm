@@ -1,7 +1,7 @@
 services:
   mdbook:
     container_name: Curso_SLURM
-    image: peaceiris/mdbook:latest
+    image: docker.io/peaceiris/mdbook:v0.4.40
     stdin_open: true
     tty: true
     ports:

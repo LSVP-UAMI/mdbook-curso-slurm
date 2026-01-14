@@ -1,7 +1,7 @@
 [book]
 authors = ["lsvp"]
 language = "es"
-multilingual = false
+#multilingual = false
 src = "src"
 title = "Curso SLURM"
 
