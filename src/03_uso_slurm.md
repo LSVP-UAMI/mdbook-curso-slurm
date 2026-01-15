@@ -1,5 +1,5 @@
-# ¿Qué es SLURM?
-
+# Uso de SLURM
+## ¿Qué es SLURM?
 > **SLURM** (Simple Linux Utility for Resource Management) es un sistema de
 > gestión de trabajos y recursos de código abierto utilizado en clusters
 > de computación de alto rendimiento (HPC).
@@ -11,10 +11,9 @@ Características principales:
 
 ---
 
-# Comandos principales de slurm
-## Para buscar información
+## Comandos de SLURM
 
-### sinfo - Información del estado del cluster
+#### sinfo - Información del estado del cluster
 
 `sinfo` muestra información sobre los nodos y particiones del cluster. Con esta 
 herramienta se puede consultar el estado de los recursos disponibles, como CPUs, 
@@ -85,7 +84,7 @@ Estados de los nodos:
 
 ---
 
-### squeue - Estado de la cola de trabajos
+#### squeue - Estado de la cola de trabajos
 
 El comando `squeue` muestra información sobre los trabajos en cola
 y en ejecución dentro del clúster.
@@ -165,7 +164,7 @@ Estados comunes de los trabajos:
 ```
 **************************************************************************
 
-### sacct - Información de trabajos completados
+#### sacct - Información de trabajos completados
 
 `sacct` muestra información histórica o detallada sobre los trabajos 
 que ya se ejecutaron o se están ejecutando.
@@ -201,7 +200,7 @@ siguiente:
 ```
 -------------------------------------
 
-### scontrol - Información detallada de jobs
+#### scontrol - Información detallada de jobs
 
 
 `scontrol` es una herramienta administrativa
@@ -211,7 +210,7 @@ La mostramos aquí para un uso muy especifico.
     scontrol -dd show job [jobid]
 ```
 
-### seff - Eficiencia de un job ejecutado
+#### seff - Eficiencia de un job ejecutado
 
 Muestra la eficiencia en el uso de recursos de un job
 
@@ -268,9 +267,25 @@ Memory Efficiency: 0.00% of 16.00 B
 ```
 
 ---
-## Enviar jobs en SLURM
+#### ¿Como enviar jobs en SLURM?
 
----
+```
+[pepito@yoltla1 ~]$ srun hostname
+srun: job 728154 queued and waiting for resources
+srun: job 728154 has been allocated resources
+nc56
+
+[pepito@yoltla1 ~]$ sbatch <job_script>
+Submitted batch job 728155
+
+
+[pepito@yoltla1 ~]$ squeue -u pepito
+JOBID  PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+727893     h-20p   prueba   pepito R        0:00      1     nc56
+
+[pepito@yoltla1 ~]$ scancel 728155
+
+```
 
 # Parámetros de Slurm
 
@@ -291,12 +306,9 @@ Se pueden especificar de dos maneras:
     srun -N 2 -n 8 -t 10 ./mi_programa
 ```
 
-Ambos casos son equivalentes: las opciones `#SBATCH` son los mismos parámetros que se usarián 
-en la línea de comandos.
+- Los parámetros por linea de comandos tienen presedencia.
 
 ## Principales parámetros de Slurm
-
-### Recursos computacionales
 
 
 | <div style="width:190px"> **Parámetro** </div>| **Descripción** | **Ejemplo** |
@@ -327,26 +339,11 @@ Cuando el trabajo usa memoria compartida (OpenMP).
 2 nodos, cada uno con 4 tareas, cada tarea usa 2 CPUs (total 16 núcleos).
 ```
 
-### Memoria
-
-| **Parámetro** | **Descripción** | **Ejemplo** |
-|:-------------:|-----------------|-------------|
-| `--mem` | Memoria total por nodo. | #SBATCH --mem=4G |
-| `--mem-per-cpu` |	Memoria por CPU. | #SBATCH --mem-per-cpu=1G |
-| `--mem-per-gpu` | Memoria por GPU. | #SBATCH --mem-per-gpu=8G |
-
-```admonish note title="Nota"
-- Si usas `--mem` y tienes varios nodos, cada nodo recibirá esa cantidad de memoria.
-
-- Si usas `--mem-per-cpu`, Slurm calcula el total = CPUs × memoria por CPU.   
-```
-
-### Tiempo y prioridad
+### Tiempo
 
 | **Parámetro** | **Descripción** | <div style="width:190px"> **Ejemplo** <div/> |
 |:-------------:|-----------------|----------------------------------------------|
-| `--time`,<br/>`-t` | Tiempo máximo de ejecución. Formato: min o HH:MM:SS. | #SBATCH -t 60<br/>#SBATCH -t 02:00:00<br/>#SBATCH -t 1-12:35:30 |
-| `--nice` | Cambia la prioridad del trabajo (valor alto = menor prioridad). | #SBATCH --nice=100 | 
+| `--time`,<br/>`-t` | Tiempo **máximo** de ejecución. Formato: min o HH:MM:SS. | #SBATCH -t 60<br/>#SBATCH -t 02:00:00<br/>#SBATCH -t 1-12:35:30 |
 
 
 ### Archivos de salida
@@ -389,15 +386,20 @@ ejecutar trabajos en paralelo o de forma interactiva.
 
 ><center>
 >
->**Actividad**
+>**Ejercicio 1**
 >
 ></center>
 >
->Ejecuta el comando `hostname` en la partición `q1` con `srun`: 
->* Con un único proceso.
->* Con dos procesos iguales.
->* Con dos procesos en distintos nodos.
->* Lanzando un proceso que tenga dos ***cores*** reservados.
+> Ejecuta el comando `hostname` en la partición `q1h-20p` y `q1h-40p` con `srun`:
+> * Con un único proceso.
+> * Con dos procesos iguales.
+> * Con dos procesos en distintos nodos.
+> * Lanzando un proceso que tenga dos ***cores*** reservados.
+> ¿ qué resultados se han obtenido?
+> ¿Qué ocurre si no especifico la particion en la que quiero ejecutar mi comando?
+> ¿Qué ocurre si no especifico el numero de nodos al usar la párticion `q1h-40p`?
+
+---
 
 # Sbatch
 
@@ -436,7 +438,7 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 ```
 ><center>
 >
->**Actividad**
+>**Ejercicio 2**
 >
 ></center>
 >
@@ -450,7 +452,7 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 >
 >#SBATCH --output=salida_%j.out
 >#SBATCH --error=error_%j.out
->#SBATCH --time=10:30
+>#SBATCH --time=2:30
 >
 >echo "Inicio de la prueba en :$(hostname)"
 >echo "Hora de inicio: $(date)"
@@ -463,7 +465,7 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 >
 >Completa el script base para que:
 >* El nombre del trabajo sea *cpu_test*
->* Se ejecute en la partición `q1`.
+>* Se ejecute en la partición `q1h-20p`.
 >* Se ejecute en una sola tarea (proceso).
 >* Solicita un único núcleo (threads).
 >* Envíe una notificación a tu correo cuando inicie el trabajo.
@@ -478,26 +480,15 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 >clúster?
 >
 >* ¿Cuánto tiempo estará el trabajo en ejecución si no la cancelo?
->
->
+>- Para lanzar la terea necesito conocer el uso del cluster ¿Cómo puedo conocer
+> el estado de las particiones
 
-# Memoria RAM en Yoltla
-
+```admonish note title="Memoria RAM en Yoltla"
 El clúster **Yoltla** esta configurado para que no sea obligatorio reservar 
 memoria explícita en los scripts de ejecución. Esto significa que los 
 trabajos pueden acceder a la memoria total disponible del nodo sin 
 necesidad de especificarla en parámetros como `--mem` o `--mem-per-cpu.`
-
-<!--
-En algunos clusters configurados con Slurm, no es obligatorio reservar 
-memoria explícita en los scripts de ejecución. Esto significa que los 
-trabajos pueden acceder a la memoria total disponible del nodo sin 
-necesidad de especificarla en parámetros como `--mem` o `--mem-per-cpu.`
--->
-
-En este tipo de configuración, Slurm no aplica límites estrictos de 
-memoria por trabajo. Cada usuario puede usar toda la memoria física 
-del nodo siempre y cuando esté libre al momento de ejecutarse su trabajo. 
+```
 
 ## Debo preocuparme por la memoria?
 
@@ -507,8 +498,6 @@ de la disponible puede causar:
 
 * Fallos por Out of Memory (OOM).
 * Terminación abrupta de procesos.
-* Impacto en otros usuarios del nodo.
-* Ineficiencia del cluster.
 
 ## Uso responsable de memoria
 
@@ -528,286 +517,28 @@ de la disponible puede causar:
         * sacct -j JOBID --format=JobID,MaxRSS,Elapsed
     * Esto te permite conocer cuánta memoria utiliza el trabajo
 
-## Especificar memoria explícitamente?
-
-En clusters donde no es obligatorio, aún podrías querer hacerlo para proteger 
-tu trabajo de procesos que podrían competir por recursos en el mismo nodo. Por ejemplo:
-
-```
-    #SBATCH --mem=8G
-```
-
-Esto le dice a Slurm que tu trabajo requiere al menos 8 GB y puede evitar que
-se ejecute en nodos sin esa memoria disponible.
-
+---
 # htop
+
+Con ssh se puede acceder a un nodo donde se tenga un job ejecutandose y ejecutar htop
 
 <center>
 
 ![htop](./images/htop.png)
 </center>
 
-*********************************************************
-
-# Aplicaciones del clúster
-
-Las aplicaciones en el clúster Yoltla están disponibles mediante la herramienta `Modules`. 
-
-## Listar los módulos del clúster
-
-Para listar los módulos del clúster, utilice el comando `module` seguido del subcomando `avail`:
-```
-module avail
-```
-A continuación se muestra de manera parcial la salida de este comando:
-```
-[pepe@yoltla0 ~]$ module avail
------------------------------ /LUSTRE/yoltla/nc/mf -----------------------------
-compilers/gcc/5.4.0
-compilers/intel/2013/u1/xe-13.2.144
-.
-.
-.
-tools/tmux/2.0
-tools/vmd/1.9.2
-
----------------------------- /LUSTRE/yoltla/gpu/mf -----------------------------
-compilers/cuda/5.0
-compilers/cuda/5.5
-.
-.
-.
-cuda/7.5/intel/15.2.164/impi/5.0.3.48/gromacs/5.0.7-s
-cuda/7.5/intel/15.6.232/impi/5.0.3.49/gromacs/5.1.4-s
-
---------------------------- /LUSTRE/yoltla/modules/ ----------------------------
-abinit/8.4.1                 namd/2.13
-amber/ambertools19           namd/2.13-CUDA
-.                            .
-.                            .
-.                            .
-namd/2.12-CUDA               wien2k/19.1
-namd/2.12-GIT-CUDA           xtb/6.2.3
-```
-
-```admonish warning title="IMPORTANTE"
-Para hacer uso de los módulos del clúster es necesario cargarlos.
-```
-
-## Cargar un módulo
-
-Para cargar un módulo, utilice el comando `module` seguido del subcomando `load` y el 
-nombre del módulo a cargar:
-```
-module load <módulo>
-```
-
-Al utilizar este comando no obtendrá ningún mensaje por parte del sistema.
-
-Por ejemplo, para cargar el modulo *intel/impi-2017u4*, ejecute el comando:
-```
-[pepe@yoltla0 ~]$ module load intel/impi-2017u4
-```
-
-```admonish note title="NOTA"
-Los módulos sólo se cargan en la sesión actual del usuario.
-```
-
-## Listar los módulos cargados
-
-Para listar todos los módulos cargados, utilice el comando `module` seguido del subcomando `list`:
-```
-module list
-```
-Por ejemplo, el usuario pepe tiene cargados los siguientes módulos:
-```
-[pepe@yoltla0 ~]$ module list
-Currently Loaded Modulefiles:
-  1) /intel/compilers-2017u4
-  2) /python/intel/2.7
-  3) /singularity/evolinc-i/5.0
-```
-
-```admonish note title="NOTA"
-En caso de no tener módulos cargados obtendrá el siguiente mensaje por parte del sistema:
-
-    No Modulefiles Currently Loaded.
-```
-
-## Descargar un módulo
-
-Para descarga un módulo, utilice el comando `module` seguido del subcomando `unload` y 
-el nombre del módulo a descargar:
-```
-module unload <módulo>
-```
-Al utilizar este comando no obtendrá ningún mensaje por parte del sistema.
-
-Por ejemplo, para descargar el módulo *intel/impi-2017u4*, ejecute el comando:
-```
-[pepe@yoltla0 ~]$ module unload intel/impi-2017u4
-```
-
-## Descargar todos los módulos cargados
-
-Para descargar todos los módulos cargados, utilice el comando `module` seguido del 
-subcomando `purge`:
-```
-module purge
-```
-
-Al utilizar este comando no obtendrá ningún mensaje por parte del sistema.
-
-Por ejemplo, el usuario pepe tiene cargados los siguientes módulos:
-```
-[pepe@yoltla0 ~]$ module list
-Currently Loaded Modulefiles:
-  1) /intel/compilers-2017u4
-  2) /python/intel/2.7
-  3) /singularity/evolinc-i/5.0
-```
-
-Al ejecutar el comando:
-```
-[pepe@yoltla0 ~]$ module purge
-```
-
-Y volver a comprobar los módulos cargados, se obtiene el siguiente mensaje:
-```
-[pepe@yoltla0 ~]$ module list
-No Modulefiles Currently Loaded.
-```
-
 ><center>
 >
->**Actividad**
+>**Ejercicio 3**
 >
 ></center>
 >
->Descarga el Archivo `suma_lista.py` y crea un scritp que tenga lo siguiente:
->
->* Asignar un nombre al trabajo
->* Se ejecute en la partición `q1`.
->* Cada trabajo reserva un único core.
->* Crea archivo de salida y error con el ID del trabajo.
->* El tiempo máximo de ejecución sea 5 minutos.
->* Descargue todos los módulos.
->* Cargue el modulo py.
->
->Agrega lo siguiente al final y ejeucta el script.
->
->```bash
->echo "iniciando trabajo en$(hostname)"
->echo "Hora de inicio: $(date)"
->
->python3 suma_lista.py
->
->echo " "
->echo "Hora de finalización: $(date)"
->```
->
-
-
-# Cuota de discos?
-
-# Eficiencia Computacional
-
-En computación de alto rendimiento, cuando paralelizamos un programa 
-(correr con varios CPUs), queremos saber si realmente estamos obteniendo 
-una mejora significativa.
-
-Para esto se utilizan doms métricas fundamentales
-* **SpeedUp**
-
-* **Eficiencia**
-
-## SpeedUp
-
-El SpeedUp mide cuánto más rápido corre un programa al usar múltiples CPUs en comparación con una sola CPU.
-
-La fórmula es:
-
-<center>
-
-   ![SpeedUp](./images/speedup.png)
-   
-</center>
-
-donde: 
-   * T1 = tiempo de ejecución con 1 CPU
-   * Tn = timepo de ejecución con N CPU
-
-Que se interpreta de la siguiente manera:
-* *SpeedUP* = 1, No hay mejora
-* *SpeedUp* = 2, El programa es el doble de rápido
-* *SpeedUp ideal* = N, (lineal)
-
->**Ejemplo**
->
->   Si un programa tarda:
->   * 100 segundos con 1 CPU
->   * 30 segundso con 4 CPUs
->
->   entonces:
->
->   <center>
->
->   ![Ejemplo SpeedUp](./images/speedup_ejemplo.png)
->
->   </center>
->
->   Signifiaca que con 4 CPUs corre **3.33** veces más rápido
-
-## Eficiencia
-
-La *Eficiencia* mide qué tan bien se usan las CPUs adicionales.
-
-Se calcula como:
-
-<center>
-
-   ![Eficiencia](./images/eficiencia.png)
-
-</center>
-
-donde:
-* *N* = número total de CPUs utilizadas.
-
->**Ejemplo**
->
->Retomando el ejemplo anterior:
->
->SpeesUp = 3.33 con 4 CPUS. 
->
-><center>
->
->   ![Eficiencia ejemplo](./images/eficiencia_ejemplo.png)
->
-></center>
->
->Que significa:
->* El programa usa **83% de la capacidad paralela ideal.**
->* El 17% restante se pierde por: 
->    * Comunicación entre procesoso
->    * operaciones secuenciales
->    * sincronización
->    * I/O, etc
-
-**Observación**
-
-El *SpeddUp* **JAMÁS** será perfecto, la comunicación entre procesos, la 
-sincronización y la parte secuencial del código limitan la *eficiencia.*
-
-# Uso de GPUS
-
-# Dudas
-
-    - htop
-    - Reserva de RAM
-    - Lmod
-    - Cuota de discos
-    - Uso de particiones GPUs
-
-
-
-
+> Crea un script para ser lanzado con sbatch con las siguientes consideraciones
+> - Se debe lanzar en q1h-20p
+> - Se debe reservar unna tarea
+> - Se le deben asignar todos los cpus a esta tarea
+> - se debe ejecutar 
+> - limite de tiempo de 3 minutos
+> Verifica en qué nodo se ejecuta la tarea, accede mediante ssh al nodo y ejecuta htop
+> ¿Cuántos procesos se están ejecutando?
+> ¿Cuál es el porcentaje de uso de cada proceso?
