@@ -2,6 +2,8 @@
 
 Las aplicaciones en el clúster Yoltla están disponibles mediante la herramienta `Modules`.
 
+> Modules permite tener diferentes aplicaciones y versiones en un mismo sistema operativo.
+
 ## Listar los módulos del clúster
 
 Para listar los módulos del clúster, utilice el comando `module` seguido del subcomando `avail`:
@@ -127,21 +129,16 @@ Y volver a comprobar los módulos cargados, se obtiene el siguiente mensaje:
 No Modulefiles Currently Loaded.
 ```
 
-><center>
->
->**Actividad**
->
-></center>
->
->Descarga el Archivo `suma_lista.py` y crea un scritp que tenga lo siguiente:
+### Ejercicio 4
+> copia el Archivo `/LUSTRE/material_curso/suma_lista.py`
+> y crea un script que tenga lo siguiente:
 >
 >* Asignar un nombre al trabajo
->* Se ejecute en la partición `q1`.
+>* Se ejecute en la partición `q1h-20p`.
 >* Cada trabajo reserva un único core.
 >* Crea archivo de salida y error con el ID del trabajo.
->* El tiempo máximo de ejecución sea 5 minutos.
->* Descargue todos los módulos.
->* Cargue el modulo py.
+>* El tiempo máximo de ejecución sea 2 minutos.
+>* Cargue el modulo python/3.12
 >
 >Agrega lo siguiente al final y ejeucta el script.
 >
@@ -154,109 +151,3 @@ No Modulefiles Currently Loaded.
 >echo " "
 >echo "Hora de finalización: $(date)"
 >```
->
-
-
-# Cuota de discos?
-
-# Eficiencia Computacional
-
-En computación de alto rendimiento, cuando paralelizamos un programa 
-(correr con varios CPUs), queremos saber si realmente estamos obteniendo 
-una mejora significativa.
-
-Para esto se utilizan doms métricas fundamentales
-* **SpeedUp**
-
-* **Eficiencia**
-
-## SpeedUp
-
-El SpeedUp mide cuánto más rápido corre un programa al usar múltiples CPUs en comparación con una sola CPU.
-
-La fórmula es:
-
-<center>
-
-   ![SpeedUp](./images/speedup.png)
-   
-</center>
-
-donde: 
-   * T1 = tiempo de ejecución con 1 CPU
-   * Tn = timepo de ejecución con N CPU
-
-Que se interpreta de la siguiente manera:
-* *SpeedUP* = 1, No hay mejora
-* *SpeedUp* = 2, El programa es el doble de rápido
-* *SpeedUp ideal* = N, (lineal)
-
->**Ejemplo**
->
->   Si un programa tarda:
->   * 100 segundos con 1 CPU
->   * 30 segundso con 4 CPUs
->
->   entonces:
->
->   <center>
->
->   ![Ejemplo SpeedUp](./images/speedup_ejemplo.png)
->
->   </center>
->
->   Signifiaca que con 4 CPUs corre **3.33** veces más rápido
-
-## Eficiencia
-
-La *Eficiencia* mide qué tan bien se usan las CPUs adicionales.
-
-Se calcula como:
-
-<center>
-
-   ![Eficiencia](./images/eficiencia.png)
-
-</center>
-
-donde:
-* *N* = número total de CPUs utilizadas.
-
->**Ejemplo**
->
->Retomando el ejemplo anterior:
->
->SpeesUp = 3.33 con 4 CPUS. 
->
-><center>
->
->   ![Eficiencia ejemplo](./images/eficiencia_ejemplo.png)
->
-></center>
->
->Que significa:
->* El programa usa **83% de la capacidad paralela ideal.**
->* El 17% restante se pierde por: 
->    * Comunicación entre procesoso
->    * operaciones secuenciales
->    * sincronización
->    * I/O, etc
-
-**Observación**
-
-El *SpeddUp* **JAMÁS** será perfecto, la comunicación entre procesos, la 
-sincronización y la parte secuencial del código limitan la *eficiencia.*
-
-# Uso de GPUS
-
-# Dudas
-
-    - htop
-    - Reserva de RAM
-    - Lmod
-    - Cuota de discos
-    - Uso de particiones GPUs
-
-
-
-

@@ -10,14 +10,10 @@ Características principales:
 - **Administrador de recursos:** Asigna CPU, memoria, GPU y otros recursos.
 
 ---
+## Comandos para obtener información
+### sinfo - Información del estado del cluster
 
-## Comandos de SLURM
-
-#### sinfo - Información del estado del cluster
-
-`sinfo` muestra información sobre los nodos y particiones del cluster. Con esta 
-herramienta se puede consultar el estado de los recursos disponibles, como CPUs, 
-memoria, tiempo máximo de ejecución y disponibilidad de los nodos.
+`sinfo` muestra información sobre los nodos y particiones del cluster. 
 
 ```bash
     # Sintaxis básica.
@@ -82,9 +78,8 @@ Estados de los nodos:
         # %G = grupos de GPU
 ```
 
----
 
-#### squeue - Estado de la cola de trabajos
+### squeue - Estado de la cola de trabajos
 
 El comando `squeue` muestra información sobre los trabajos en cola
 y en ejecución dentro del clúster.
@@ -135,10 +130,6 @@ Estados comunes de los trabajos:
 | `PD` | Pending | Esperando recursos o dependencias. |
 | `R` | Running | En ejecucuón. |
 | `CG` | Completing | Termonando ejecución. |
-| `CD` | Completed | Finalizado con éxito. | 
-| `F` | Failed | Finalizó con error. | 
-| `TO` | Timeout | Excedió el tiempo máximo. | 
-| `CA` | Cancelled | Cancelado por el usuario o el sistema. | 
 
 **Ejemplos de uso**
 ```bash
@@ -162,9 +153,8 @@ Estados comunes de los trabajos:
         # %R = Motivo o lista de nodos.
 
 ```
-**************************************************************************
 
-#### sacct - Información de trabajos completados
+### sacct - Información de trabajos completados
 
 `sacct` muestra información histórica o detallada sobre los trabajos 
 que ya se ejecutaron o se están ejecutando.
@@ -188,19 +178,18 @@ siguiente:
 ```bash
     # Información de trabajos de un suario.
     sacct -Xu 'usuario'
-    
+
     # Información de trabajos en un rango de fechas.
     sacct -XS 2024-01-01 -E 2024-01-02
-    
+
     # Información detallada de un trabajo
     sacct -Xj 12345 -o jobid,jobname,partition,account,alloccpus,state,exitcode
-    
+
     # Información de trabajos cancelados o fallidos
     sacct -Xs CA,F
 ```
--------------------------------------
 
-#### scontrol - Información detallada de jobs
+### scontrol - Información detallada de jobs
 
 
 `scontrol` es una herramienta administrativa
@@ -210,7 +199,7 @@ La mostramos aquí para un uso muy especifico.
     scontrol -dd show job [jobid]
 ```
 
-#### seff - Eficiencia de un job ejecutado
+### seff - Eficiencia de un job ejecutado
 
 Muestra la eficiencia en el uso de recursos de un job
 
@@ -229,11 +218,76 @@ Memory Utilized: 635.57 MB
 Memory Efficiency: 0.00% of 16.00 B
 ```
 
+### Yoltla_pool - uso actual del cluster
 
+Script local en estaado beta para mostrar información de uso actual del cluster
+
+```
+module load yoltla/beta 
+yoltla_pool
+```
+
+Ejemplo de salida
+```
+Particiones por tipo de nodo:
+==========================================================
+NC         TTv1        TTv2       NCZ         GPU   VGPU
+-------    ---------   --------   ----------  ----  ------
+q1h-20p    tt2d-80p    tt2d-64p   qz2d-64p    gpus  vgpus
+q1d-20p    tt2d-100p   tt1d-128p  qz2d-128p
+q4d-20p    tt1d-160p   tt1d-256p  qz1d-256p
+q7d-20p    tt12h-320p  tt1d-512p  qz1d-512p
+q1h-40p    qz12h-768p
+q1d-40p
+q4d-40p
+q4d-80p
+q1h-80p
+q12h-80p
+q1d-80p
+q1h-160p
+q12h-160p
+q1d-160p
+q1h-320p
+q12h-320p
+q1d-320p
+
+Estado actual:
+=====================================
+TIPO    JOBS_PENDIENTES  NODOS_LIBRES
+------  ---------------  ------------
+nc      174              5
+ttv1    19               3
+ttv2    0                3
+ncz     41               0
+gpu     3                0
+vgpu    1                0
+-----   ---------------  ------------
+Total   238              11
+```
 
 
 
 ---
+
+## ¿Como enviar jobs en SLURM?
+
+```
+[pepito@yoltla1 ~]$ srun hostname
+srun: job 728154 queued and waiting for resources
+srun: job 728154 has been allocated resources
+nc56
+
+[pepito@yoltla1 ~]$ sbatch <job_script>
+Submitted batch job 728155
+
+
+[pepito@yoltla1 ~]$ squeue -u pepito
+JOBID  PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+727893     h-20p   prueba   pepito R        0:00      1     nc56
+
+[pepito@yoltla1 ~]$ scancel 728155
+
+```
 
 ### scancel - Cancelar trabajos
 
@@ -266,28 +320,8 @@ Memory Efficiency: 0.00% of 16.00 B
     scancel -t PENDING -u 'nombre_usuario'
 ```
 
----
-#### ¿Como enviar jobs en SLURM?
 
-```
-[pepito@yoltla1 ~]$ srun hostname
-srun: job 728154 queued and waiting for resources
-srun: job 728154 has been allocated resources
-nc56
-
-[pepito@yoltla1 ~]$ sbatch <job_script>
-Submitted batch job 728155
-
-
-[pepito@yoltla1 ~]$ squeue -u pepito
-JOBID  PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-727893     h-20p   prueba   pepito R        0:00      1     nc56
-
-[pepito@yoltla1 ~]$ scancel 728155
-
-```
-
-# Parámetros de Slurm
+## Parámetros de Slurm
 
 Indican qué recursos necesita un trabajo: número de nodos, CPUs, memoria, 
 tiempo, partición, etc.
@@ -300,16 +334,13 @@ Se pueden especificar de dos maneras:
     #SBATCH -n 8   =  #SBATCH --ntasks=1
     #SBATCH -t 10  =  #SBATCH --time=00:10:00
 ```
-        
+
 - Desde la línea de comandos, al ejecutar `srun` o `sbatch`:
 ```bash
     srun -N 2 -n 8 -t 10 ./mi_programa
 ```
 
 - Los parámetros por linea de comandos tienen presedencia.
-
-## Principales parámetros de Slurm
-
 
 | <div style="width:190px"> **Parámetro** </div>| **Descripción** | **Ejemplo** |
 |:---------------------------------------------:|-----------------|-------------|
@@ -339,14 +370,14 @@ Cuando el trabajo usa memoria compartida (OpenMP).
 2 nodos, cada uno con 4 tareas, cada tarea usa 2 CPUs (total 16 núcleos).
 ```
 
-### Tiempo
+## Tiempo
 
 | **Parámetro** | **Descripción** | <div style="width:190px"> **Ejemplo** <div/> |
 |:-------------:|-----------------|----------------------------------------------|
 | `--time`,<br/>`-t` | Tiempo **máximo** de ejecución. Formato: min o HH:MM:SS. | #SBATCH -t 60<br/>#SBATCH -t 02:00:00<br/>#SBATCH -t 1-12:35:30 |
 
 
-### Archivos de salida
+## Archivos de salida
 
 |<div style="width:230px"> **Parámetro** <div/> | **Descripción** | **Ejemplo** |
 |:---------------------------------------------:|-----------------|-------------|
@@ -359,23 +390,18 @@ Cuando el trabajo usa memoria compartida (OpenMP).
 ```admonish success title=" "
 - `%j` inserta el ID del trabajo automáticamente.
 ```
-    
-# Srun 
 
-Es un comando de la utilidad del gestor de trabajos de clúster. Se utiliza para 
-ejecutar trabajos en paralelo o de forma interactiva. 
+### Srun 
+
+ Se utiliza para ejecutar trabajos en paralelo de forma interactiva.
 
 * Puede ejecutar directamente programas en paralelo, sin necesidad de un script de trabajo.
 * `srun` es síncrono y espera a que el trabajo termine para devolver el control al usuario.
-
-
 
 ```bash
     # Sintáxis básica
     srun [opciones] <comando> 
 ```
-
-`srun` puede iniciar trabajos o pasos de trabajos dentro de una asignación de recursos existente, 
 
 **Ejemplo**
 ```bash
@@ -383,31 +409,25 @@ ejecutar trabajos en paralelo o de forma interactiva.
 [pepe@nc56 ~]$ srun --partition q4d-20p --nodes 1 --cpus-per-tasks = 4 --time=00:10:00 <comando>
 
 ```
-
-><center>
->
->**Ejercicio 1**
->
-></center>
->
+#### Ejercicio 1
 > Ejecuta el comando `hostname` en la partición `q1h-20p` y `q1h-40p` con `srun`:
 > * Con un único proceso.
 > * Con dos procesos iguales.
 > * Con dos procesos en distintos nodos.
 > * Lanzando un proceso que tenga dos ***cores*** reservados.
-> ¿ qué resultados se han obtenido?
+> ¿Qué resultados se han obtenido?
 > ¿Qué ocurre si no especifico la particion en la que quiero ejecutar mi comando?
 > ¿Qué ocurre si no especifico el numero de nodos al usar la párticion `q1h-40p`?
 
 ---
 
-# Sbatch
+### Sbatch
 
 Es el comando de Slurm usado para enviar trabajos (scripts) al clúster
 para que se ejecuten en segundo plano.
 
-A diferencia de `srun`, que ejecuta tareas de forma interactiva o dentro 
-de un script de Slurm, `sbatch` no ejecuta el trabajo inmeditamente, 
+A diferencia de `srun`, que ejecuta tareas de forma interactiva,
+`sbatch` no ejecuta el trabajo inmeditamente, 
 solo lo envía el script a la cola del clúster.
 
 ```bash 
@@ -436,19 +456,11 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 ```bash
     submitted batch job 12345
 ```
-><center>
->
->**Ejercicio 2**
->
-></center>
->
->Usaremos el comando `yes` que repite indefinidamente una cadena y 
->puede consumir el 100% de CPU. 
->
+
+#### Ejercicio 2
 >**script base**
 >```bash
 >#!/bin/bash
->
 >
 >#SBATCH --output=salida_%j.out
 >#SBATCH --error=error_%j.out
@@ -467,30 +479,21 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 >* El nombre del trabajo sea *cpu_test*
 >* Se ejecute en la partición `q1h-20p`.
 >* Se ejecute en una sola tarea (proceso).
->* Solicita un único núcleo (threads).
 >* Envíe una notificación a tu correo cuando inicie el trabajo.
 >
 >Ejecuta el scrip y contesta lo siguiente:
->* ¿Qué comando puedo usar para ver información del trabajo 
->en ejecución?
->
+>* ¿Qué comando puedo usar para ver información del trabajo en ejecución?
 >* ¿Cómo puedo cancelar mi trabajo?
->
->* ¿Qué comando me permite conocer el estado de las particiones del 
->clúster?
->
+>* ¿Qué comando me permite conocer el estado de las particiones del clúster?
 >* ¿Cuánto tiempo estará el trabajo en ejecución si no la cancelo?
->- Para lanzar la terea necesito conocer el uso del cluster ¿Cómo puedo conocer
-> el estado de las particiones
 
-```admonish note title="Memoria RAM en Yoltla"
+
+## Debo preocuparme por la memoria?
+
 El clúster **Yoltla** esta configurado para que no sea obligatorio reservar 
 memoria explícita en los scripts de ejecución. Esto significa que los 
 trabajos pueden acceder a la memoria total disponible del nodo sin 
 necesidad de especificarla en parámetros como `--mem` o `--mem-per-cpu.`
-```
-
-## Debo preocuparme por la memoria?
 
 Que el sistema no obligue a definir memoria en el script no significa 
 que el uso de memoria sea irrelevante. Un trabajo que use más memoria 
@@ -499,7 +502,7 @@ de la disponible puede causar:
 * Fallos por Out of Memory (OOM).
 * Terminación abrupta de procesos.
 
-## Uso responsable de memoria
+### Uso responsable de memoria
 
 * Conoce le consumo típico de tus aplicacions 
     * Programas cientifics como `MATLAB`, `R` o `Python` con grandes matrices
@@ -518,7 +521,7 @@ de la disponible puede causar:
     * Esto te permite conocer cuánta memoria utiliza el trabajo
 
 ---
-# htop
+## htop
 
 Con ssh se puede acceder a un nodo donde se tenga un job ejecutandose y ejecutar htop
 
@@ -527,18 +530,14 @@ Con ssh se puede acceder a un nodo donde se tenga un job ejecutandose y ejecutar
 ![htop](./images/htop.png)
 </center>
 
-><center>
->
->**Ejercicio 3**
->
-></center>
->
+### Ejercicio 3
 > Crea un script para ser lanzado con sbatch con las siguientes consideraciones
 > - Se debe lanzar en q1h-20p
-> - Se debe reservar unna tarea
-> - Se le deben asignar todos los cpus a esta tarea
-> - se debe ejecutar 
+> - Se debe reservar una tarea
+> - Se le deben asignar todos los cpus del nodo a esta tarea
+> - se debe ejecutar `yes > /dev/null`
 > - limite de tiempo de 3 minutos
 > Verifica en qué nodo se ejecuta la tarea, accede mediante ssh al nodo y ejecuta htop
 > ¿Cuántos procesos se están ejecutando?
 > ¿Cuál es el porcentaje de uso de cada proceso?
+

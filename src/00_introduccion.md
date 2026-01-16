@@ -4,10 +4,10 @@ Curso impartido por:
 - Eduardo Romero Arzate (coordinador administrativo del LSVP)
 
 Asistido por:
-- Luis fernando Torres Herandez
 - Omar Juarez Merino
+- Luis Fernando Torres Herandez
+- Erick Ricardo Martinez Martinez
 - Diego Morales Serrano
-- Erick martinez Martinez
 
 ## Objetivos
 - Acceso al cluster Yoltla
@@ -30,4 +30,5 @@ Asistido por:
 - Se asignarán usuarios para la realización de cada ejercicio.
     - Se compartirá la pantalla de forma grupal.
 - La página con el material del curso está disponible para todos.
+
 
