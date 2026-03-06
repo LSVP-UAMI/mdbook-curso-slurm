@@ -14,10 +14,10 @@ echo " Cargando módulo de entorno MPI "
 echo "----------------------------------------"
 
 # Cargar el módulo MPI disponible en el sistema
-module load mpi
+module load intel-oneapi/tools-2022
 
 echo "Compilando el programa..."
-mpicc -O2 -o hello_mpi hello_mpi.c
+mpicc hello_mpi.c -o hello_mpi 
 
 echo "----------------------------------------"
 echo " Ejecutando el programa con $SLURM_NTASKS procesos MPI "
