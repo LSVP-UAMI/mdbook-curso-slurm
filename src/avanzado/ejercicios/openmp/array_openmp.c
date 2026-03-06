@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
+#include <time.h>
 
 #define N 100000000  // Tamaño del arreglo (100 millones)
 
@@ -8,13 +9,18 @@ int main() {
     double *array = (double*) malloc(N * sizeof(double));
     double sum = 0.0;
     double start_time, end_time;
+    srand(time(NULL));
+
+    start_time = omp_get_wtime();
 
     // Inicializa el arreglo
     for (long i = 0; i < N; i++) {
-        array[i] = 1.0;  // Valor fijo para validar el resultado fácilmente
+        //array[i] = 1.0;  // Valor fijo para validar el resultado fácilmente
+        double num = rand();
+        array[i] = num; // valor aleatorio
     }
 
-    start_time = omp_get_wtime();
+    //start_time = omp_get_wtime();
 
     // Región paralela con reducción
     #pragma omp parallel for reduction(+:sum)
