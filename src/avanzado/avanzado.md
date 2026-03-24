@@ -201,6 +201,23 @@ y la sincronización.
 
 ## **ACTIVIDAD**
 
+
+[Ejemplo en C](./ejercicios/openmp/array_openmp.c)
+
+[Script de OpenMP](./ejercicios/openmp/openmp.sh)
+
+[Ejemplo en python](./ejercicios/job_arrays/process_data.py)
+
+
+
+
+```bash
+{{#include ./ejercicios/openmp/openmp.sh}}
+```
+
+
+
+
 ****************************************************************************************************
 
 
