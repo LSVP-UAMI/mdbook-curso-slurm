@@ -196,27 +196,23 @@ y la sincronización.
 
 * Aplicaciones de ingeniería y física.
 
-****************************************************************************************************
-
-
-## **ACTIVIDAD**
-
-
-[Ejemplo en C](./ejercicios/openmp/array_openmp.c)
-
-[Script de OpenMP](./ejercicios/openmp/openmp.sh)
-
-[Ejemplo en python](./ejercicios/job_arrays/process_data.py)
-
-
-
+>
+><center>
+>
+>**ACTIVIDAD**
+>
+></center>
+>
+>Realiza una copia del archivo [array_openmp.c](./ejercicios/openmp/array_openmp.txt) en tu directorio 
+>de trabajo y lleva a cabo las siguientea acciones en el script ***openmp.sh***:
+>
+>* Define el número de hilos a utilizar.
+>* Agrega las intrucciones para compilar ***array_openmp.c***.
+>* Ejecuta el archivo compilado.
 
 ```bash
-{{#include ./ejercicios/openmp/openmp.sh}}
+{{#include ./ejercicios/openmp/openmp.txt}}
 ```
-
-
-
 
 ****************************************************************************************************
 
@@ -304,7 +300,24 @@ un clúster.
 
 ****************************************************************************************************
 
-## **ACTIVIDAD**
+>
+><center>
+>
+>**ACTIVIDAD**
+>
+></center>
+>
+>Realiza una copia del archivo [hello_mpi.c](./ejercicios/mpi/hello_mpi.txt) en tu directorio 
+>de trabajo y lleva a cabo las siguientea acciones en el script ***mpi.sh***:
+>
+>* Define el número de procesos a utilizar.
+>* Agrega las intrucciones para compilar ***hello_mpi.c***.
+>* Ejecuta el archivo compilado.
+
+```bash
+{{#include ./ejercicios/mpi/mpi.txt}}
+```
+
 
 ****************************************************************************************************
 

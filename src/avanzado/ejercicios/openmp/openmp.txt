@@ -1,0 +1,33 @@
+script openmp.sh
+
+#!/bin/bash
+#SBATCH --job-name=suma_openmp        # Nombre del trabajo
+#SBATCH --output=suma_openmp_%j.out   # Archivo de salida (%j = ID del trabajo)
+#SBATCH --error=suma_openmp_%j.err    # Archivo de error
+#SBATCH --ntasks=1                    # Ejecutar una sola tarea
+#SBATCH define el número de hilos     # Número de hilos (CPU por tarea)
+#SBATCH --time=00:05:00               # Tiempo máximo de ejecución
+#SBATCH --partition=q1                # Cola/partición del clúster
+
+echo "-----------------------------------------"
+echo " Cargando módulo de compilador GCC "
+echo "-----------------------------------------"
+
+# Cargar el módulo del compilador con soporte para OpenMP
+module load gcc/12.1.0
+
+echo "Compilando el programa..."
+# Compilar "array_openmp.c"
+
+echo "-----------------------------------------"
+echo " Ejecutando el programa con $SLURM_CPUS_PER_TASK hilos "
+echo "-----------------------------------------"
+
+# Exportar número de hilos
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+# Ejecutar el programa
+
+
+echo "-----------------------------------------"
+echo "Ejecución finalizada"
