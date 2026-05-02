@@ -204,11 +204,13 @@ y la sincronización.
 ></center>
 >
 >Realiza una copia del archivo [array_openmp.c](./ejercicios/openmp/array_openmp.txt) en tu directorio 
->de trabajo y lleva a cabo las siguientea acciones en el script ***openmp.sh***:
+>de trabajo y lleva a cabo las siguientes acciones en el script ***openmp.sh***:
 >
 >* Define el número de hilos a utilizar.
 >* Agrega las intrucciones para compilar ***array_openmp.c***.
 >* Ejecuta el archivo compilado.
+>* Probar con diferentes valores de CPUs (1, 2, 4, 8)
+>
 
 ```bash
 {{#include ./ejercicios/openmp/openmp.txt}}
@@ -298,8 +300,6 @@ un clúster.
 
 * Mayor latencia de comunicación por el uso de red.
 
-****************************************************************************************************
-
 >
 ><center>
 >
@@ -308,16 +308,18 @@ un clúster.
 ></center>
 >
 >Realiza una copia del archivo [hello_mpi.c](./ejercicios/mpi/hello_mpi.txt) en tu directorio 
->de trabajo y lleva a cabo las siguientea acciones en el script ***mpi.sh***:
+>de trabajo y lleva a cabo las siguientes acciones en el script ***mpi.sh***:
 >
 >* Define el número de procesos a utilizar.
 >* Agrega las intrucciones para compilar ***hello_mpi.c***.
 >* Ejecuta el archivo compilado.
+>* Modifica el número de procesos (2, 4, 8), observa como se distribuyen
+> los procesos en diferentes nodos.
+>
 
 ```bash
 {{#include ./ejercicios/mpi/mpi.txt}}
 ```
-
 
 ****************************************************************************************************
 
@@ -366,12 +368,28 @@ Así, en total se utilizan 32 hilos en paralelo, combinando ambos modelos.
 * Se requiere balancear adecuadamente el número de procesos MPI y los hilos OpenMP.
 * El rendimiento depende fuertemente de la arquitectura del clúster y la configuración de Slurm.
 
+>
+><center>
+>
+>**ACTIVIDAD**
+>
+></center>
+>
+>Realiza una copia del archivo [hybrid_sum.c](./ejercicios/openmp_mpi/hybrid_sum.txt) en tu directorio 
+>de trabajo y lleva a cabo las siguientes acciones en el script ***suma_openmp_mpi.sh***:
+>
+>* Define el número de procesos a utilizar.
+>* Agrega las intrucciones para compilar ***hybrid_sum.c***.
+>* Ejecuta el archivo compilado.
+>* Modifica la configuración de los procesos, CPUs  y el tamaño del arreglo N y compara tiempos.
+>
+
+```bash
+{{#include ./ejercicios/openmp_mpi/suma_openmp_mpi.txt}}
+```
+
 ****************************************************************************************************
 
-
-## **ACTIVIDAD**
-
-****************************************************************************************************
 
 # **TRABAJOS PARALELOS (GPU)**
 
@@ -395,8 +413,6 @@ de entorno y salida.
 Este ejemplo crea 10 tareas (de 0 a 9).
 ```
 
-
-
 ```bash
 Cada una tendrá una variable de entorno especial:
 
@@ -415,10 +431,25 @@ Cada una tendrá una variable de entorno especial:
 | `--array=0-99%10` | Ejecuta 100 tareas, máximo 10 a la vez |
 | Ventaja | Ejecutar muchas tareas similares en paralelo fácilmente |
 
-****************************************************************************************************
+>
+><center>
+>
+>**ACTIVIDAD**
+>
+></center>
+>
+>Realiza una copia del archivo [process_data.py](./ejercicios/job_arrays/process_data.txt) en tu directorio 
+>de trabajo y lleva a cabo las siguientes acciones en el script ***job_array.sh***:
+>
+>* Crear cinco tareas (1 a 5).
+>* Cargar el entorno python.
+>* Modificar el rango del array para lanzar 10 tareas.
+>* Agrega un salto para ejecutar cada 2 valores.
+>
 
-
-## **ACTIVIDAD**
+```bash
+{{#include ./ejercicios/job_arrays/job_array.txt}}
+```
 
 ****************************************************************************************************
 
@@ -443,11 +474,11 @@ Se definen con la opción `--dependency` al enviar un trabajo con sbatch.
 
 **Ejemplo**
 ```bash
-#Supón que tienes tres trabajos:
+Supón que tienes tres trabajos:
 
-    #preprocesar.sh
-    #analizar.sh
-    #graficar.sh
+- preprocesar.sh
+- analizar.sh
+- graficar.sh
 
 #1. Primero ejecutas el trabajo de preprocesamiento:
     jid1=$(sbatch preprocesar.sh | awk '{print $4}')
@@ -465,3 +496,5 @@ Se definen con la opción `--dependency` al enviar un trabajo con sbatch.
 ## **ACTIVIDAD?**
 
 # Programación de trabajos
+
+
