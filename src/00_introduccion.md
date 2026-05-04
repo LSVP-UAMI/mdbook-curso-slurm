@@ -24,7 +24,6 @@ Asistido por miembros del LSVP:
     - Consultas
     - Cargas
 - Ejercicios prácticos
-- Consejos Para hacer solicitudes de soporte
 
 ## Modalidad
 - Se ingresará al clúster con las cuentas de cada usuario
