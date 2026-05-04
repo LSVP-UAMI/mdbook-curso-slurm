@@ -1,4 +1,7 @@
 # Bienvenidos al curso para usuarios del clúster Yoltla
+
+![Yoltla](./images/yoltla_cluster.jpg)
+
 > - Laboratorio de Supercómputo y Visualización en Paralelo ([LSVP](https://www.iztapalapa.uam.mx/uami/infraestructura/catalogo_infraestructura_alta_especializacion_2025.pdf))
 > - Nodo UAM del Laboratorio Nacional de Computo de Alto desempeño ([LANCAD](http://www.lancad.mx))
 
