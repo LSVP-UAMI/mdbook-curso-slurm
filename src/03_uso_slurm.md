@@ -1,7 +1,7 @@
-# Uso de SLURM
-## ¿Qué es SLURM?
-> **SLURM** (Simple Linux Utility for Resource Management) es un sistema de
-> gestión de trabajos y recursos de código abierto utilizado en clusters
+# Uso de Slurm
+## ¿Qué es Slurm?
+> **Slurm** (Simple Linux Utility for Resource Management) es un sistema de
+> gestión de trabajos y recursos de código abierto utilizado en clústers
 > de computación de alto rendimiento (HPC).
 
 Características principales:
@@ -11,9 +11,9 @@ Características principales:
 
 ---
 ## Comandos para obtener información
-### sinfo - Información del estado del cluster
+### sinfo - Información del estado del clúster
 
-`sinfo` muestra información sobre los nodos y particiones del cluster. 
+`sinfo` muestra información sobre los nodos y particiones del clúster. 
 
 ```bash
     # Sintaxis básica.
@@ -174,7 +174,7 @@ siguiente:
 12347.batch  jobC       debug       users          16    CANCELLED 0:15
 ```
 
-**Ejemlos de uso**
+**Ejemplos de uso**
 ```bash
     # Información de trabajos de un suario.
     sacct -Xu 'usuario'
@@ -218,9 +218,9 @@ Memory Utilized: 635.57 MB
 Memory Efficiency: 0.00% of 16.00 B
 ```
 
-### Yoltla_pool - uso actual del cluster
+### Yoltla_pool - uso actual del clúster
 
-Script local en estaado beta para mostrar información de uso actual del cluster
+Script local en estado beta para mostrar información de uso actual del clúster
 
 ```
 module load yoltla/beta 
@@ -269,7 +269,7 @@ Total   238              11
 
 ---
 
-## ¿Como enviar jobs en SLURM?
+## ¿Como enviar jobs en Slurm?
 
 ```
 [pepito@yoltla1 ~]$ srun hostname
@@ -340,7 +340,7 @@ Se pueden especificar de dos maneras:
     srun -N 2 -n 8 -t 10 ./mi_programa
 ```
 
-- Los parámetros por linea de comandos tienen presedencia.
+- Los parámetros por linea de comandos tienen precedencia.
 
 | <div style="width:190px"> **Parámetro** </div>| **Descripción** | **Ejemplo** |
 |:---------------------------------------------:|-----------------|-------------|
@@ -416,8 +416,8 @@ Cuando el trabajo usa memoria compartida (OpenMP).
 > * Con dos procesos en distintos nodos.
 > * Lanzando un proceso que tenga dos ***cores*** reservados.
 > ¿Qué resultados se han obtenido?
-> ¿Qué ocurre si no especifico la particion en la que quiero ejecutar mi comando?
-> ¿Qué ocurre si no especifico el numero de nodos al usar la párticion `q1h-40p`?
+> ¿Qué ocurre si no especifico la partición en la que quiero ejecutar mi comando?
+> ¿Qué ocurre si no especifico el numero de nodos al usar la partición `q1h-40p`?
 
 ---
 
@@ -427,7 +427,7 @@ Es el comando de Slurm usado para enviar trabajos (scripts) al clúster
 para que se ejecuten en segundo plano.
 
 A diferencia de `srun`, que ejecuta tareas de forma interactiva,
-`sbatch` no ejecuta el trabajo inmeditamente, 
+`sbatch` no ejecuta el trabajo inmediatamente, 
 solo lo envía el script a la cola del clúster.
 
 ```bash 
@@ -481,7 +481,7 @@ Después de enviar un trabajo, obtendremos una salida similar a la siguiente:
 >* Se ejecute en una sola tarea (proceso).
 >* Envíe una notificación a tu correo cuando inicie el trabajo.
 >
->Ejecuta el scrip y contesta lo siguiente:
+>Ejecuta el script y contesta lo siguiente:
 >* ¿Qué comando puedo usar para ver información del trabajo en ejecución?
 >* ¿Cómo puedo cancelar mi trabajo?
 >* ¿Qué comando me permite conocer el estado de las particiones del clúster?
@@ -504,16 +504,16 @@ de la disponible puede causar:
 
 ### Uso responsable de memoria
 
-* Conoce le consumo típico de tus aplicacions 
-    * Programas cientifics como `MATLAB`, `R` o `Python` con grandes matrices
+* Conoce le consumo típico de tus aplicaciones 
+    * Programas científicos como `MATLAB`, `R` o `Python` con grandes matrices
     suelen requerir varios GBs de memoria.
 
 * Pruebas con *datasets* pequeños
     * Antes de lanzar un trabajo grande, ejecuta versiones reducidas
     para estimar tiempo y memoria usada.
 
-* Monitorea el uso de memorio durante la ejecución
-    * Utiliza herraminetas como: 
+* Monitorea el uso de memoria durante la ejecución
+    * Utiliza herramientas como: 
         * top
         * htop
         * seff JOBID
@@ -523,7 +523,7 @@ de la disponible puede causar:
 ---
 ## htop
 
-Con ssh se puede acceder a un nodo donde se tenga un job ejecutandose y ejecutar htop
+Con ssh se puede acceder a un nodo donde se tenga un job ejecutándose y ejecutar htop
 
 <center>
 

@@ -1,6 +1,6 @@
 # Cuota de discos?
 
-Las politicas actuales del cluster son
+Las políticas actuales del clúster son
 
 ## Para directorio HOME
 Por grupo de trabajo en el directorio *HOME*

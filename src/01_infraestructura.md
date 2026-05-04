@@ -1,10 +1,10 @@
 # Infraestructura
-## Cluster Yoltla
+## Clúster Yoltla
 
 ![Clúster Yoltla](./images/yolta.jpg)
 
-El cluster `Yoltla`, cuyo nombre deriva del vocablo náhuatl ***Yoltlamaltini*** 
-y que significa ***“semillero del saber o conocimiento”***
+> Clúster `Yoltla`, cuyo nombre deriva del vocablo náhuatl ***Yoltlamaltini***
+> y que significa ***“semillero del saber o conocimiento”***
 
 ## Tipos de nodos
 - Nodos de login
@@ -17,13 +17,13 @@ y que significa ***“semillero del saber o conocimiento”***
 
 ## Nodos Yoltla/login
 - 2 Nodos
-    - Intel(R) Xeon(R) CPU E5-2695 v2 @ 2.40GHz
+    - Intel(R) Xeon(R) CPU E5-2695 v2 @ 2.40GHz (Ivy Bridge)
     - 48 CPUs (hilos Virtuales)
     - 94 GB RAM
 
 <center>
 
-![Nodos yoltla](./images/nodos_yoltla/login_yoltla.png)
+![Nodos Yoltla](./images/nodos_yoltla/login_yoltla.png)
 </center>
 
 ---
@@ -31,10 +31,11 @@ y que significa ***“semillero del saber o conocimiento”***
 ## Nodos nc
 Particiones: q1h-20p, q1h-160p...
 - 120 Nodos
-    - Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz
+    - Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz (Ivy Bridge)
     - 20 CPUs
     - 64 GB RAM
-- Orientado a aplicaciones de memoria compartida y distribuida poco demandantes
+    - 400 GFlops teóricos
+- Orientado a aplicaciones compartida y distribuida poco demandantes
 
 <center>
 
@@ -49,6 +50,7 @@ Particiones: qz2d-64p, qz12h-768p...
     - AMD EPYC 7513 @ 2.6GHz
     - 64 CPUs
     - 512 GB RAM
+    - 2,662 GFlops teóricos
 <center>
 - Orientado a aplicaciones de memoria compartida y distribuida demandantes
 
@@ -65,6 +67,7 @@ Particiones: tt2d-80p, tt12h-320p (multiplos de 20)
     - Intel(R) Xeon(R) CPU E5-2660 v3 @ 2.60GHz
     - 20 CPUs
     - 128 GB RAM
+    - 832 GFlops Teóricos
 - Orientado a aplicaciones de memoria distribuida
 
 <center>
@@ -80,6 +83,7 @@ Particiones: tt2d-64p, tt1d-512p (multiplos de 32)
     - Intel(R) Xeon(R) CPU E5-2683 v4 @ 2.10GHz
     - 32 CPUs
     - 256 GB RAM
+    - 1075 Gflops Teóricos
 - Orientado a aplicaciones de memoria distribuida
 
 <center>
@@ -94,6 +98,7 @@ Particiones: gpus
 - 20 Nodos
     - Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz
     - Nvidia k20 (2/4)
+    - 1500 Gflops teóricos por GPU
     - 20 CPUs
     - 64 GB RAM
 - Destinado a tareas que requieran uso de GPUs poco demandantes
@@ -110,6 +115,7 @@ Particiones: vgpus
     - Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz
     - 36 CPUs
     - GPU Nvidia V100-SXM2  16GB (2/4)
+    - 7800 Gflops teóricos por GPU
     - 256 GB
 - Destinado a tareas que requieran uso de GPUs demandantes
 
@@ -127,8 +133,8 @@ Particiones: vgpus
 ![Clúster yoltla2](./images/nodos_yoltla/c_yoltla2.png)
 </center>
 
-- 216.5 TFlops
+- 316 TFlops
 - 6592 CPUs
-- 287 nodos
+- 254 nodos
 - 95 TB almacenamiento LUSTRE
-- Red Infiniband FDR 40Gb/s
+- Red Infiniband FDR 40 Gb/s y 56 GB/s

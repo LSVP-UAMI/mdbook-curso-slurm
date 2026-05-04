@@ -135,12 +135,12 @@ No Modulefiles Currently Loaded.
 >
 >* Asignar un nombre al trabajo
 >* Se ejecute en la partición `q1h-20p`.
->* Cada trabajo reserva un único core.
+>* Cada trabajo reserva un único nucleo.
 >* Crea archivo de salida y error con el ID del trabajo.
 >* El tiempo máximo de ejecución sea 2 minutos.
 >* Cargue el modulo python/3.12
 >
->Agrega lo siguiente al final y ejeucta el script.
+>Agrega lo siguiente al final y ejecuta el script.
 >
 >```bash
 >echo "iniciando trabajo en$(hostname)"

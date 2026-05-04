@@ -1,5 +1,5 @@
-# Uso de GPUS
-- Como ejecutar un programa mediante Slurm que utilice gpus
+# Uso de GPUs
+- Como ejecutar un programa mediante Slurm que utilice GPUs
 
 Particiones
 > - gpus

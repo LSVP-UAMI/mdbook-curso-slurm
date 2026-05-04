@@ -17,7 +17,7 @@ Diagrama de conexión por ssh al clúster Yoltla
 
 ---
 
-## SSH GNU/Linux OS X
+## SSH GNU/Linux y OS X
 
 Desde la terminal ejecute el comando:
 ```
@@ -56,4 +56,9 @@ contraseña:
 
 ![Pantalla bienvenida](./images/pantalla_bienvenida.png)
 </center>
+
+### Openssh nativo
+
+Integrado a windows 10 y 11 desde 2019
+[Tutorial](https://learn.microsoft.com/en-us/windows/terminal/tutorials/ssh)
 
