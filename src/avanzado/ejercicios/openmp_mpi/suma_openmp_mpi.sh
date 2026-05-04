@@ -12,7 +12,10 @@ echo "----------------------------------------"
 echo " Cargando entorno MPI y configurando OpenMP "
 echo "----------------------------------------"
 
-module load mpi
+echo "Cargando módulos..."
+module load gcc/12.1.0
+module load intel-oneapi/tools-2022
+
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 echo "Compilando el programa híbrido..."
