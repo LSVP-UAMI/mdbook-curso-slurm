@@ -44,10 +44,6 @@ El principio básico es: `Un problema grande se divide en partes más pequeñas 
 pueden resolverse al mismo tiempo en diferentes unidades de procesamiento 
 (CPU, GPU, nodos de un clúster, etc.).`
 	
-<center>
-
-**IMAGEN**</center>
-	
 
 **Tipos de paralelismo**
 
@@ -70,8 +66,7 @@ pueden resolverse al mismo tiempo en diferentes unidades de procesamiento
 
 - Sincronización y comunicación entre procesos.
 - División eficiente del trabajo (no todas las tareas se paralelizan bien).
-- 
-Sobrecarga de coordinación, que puede limitar el rendimiento.
+- Sobrecarga de coordinación, que puede limitar el rendimiento.
 
 # Computación Paralela VS Computación Serial
 
@@ -127,7 +122,7 @@ del programa se ejecutan en paralelo y cómo se comunican entre sí.
 ****************************************************************************************************
 
 
-# Memoria Compartida (Paralelismo Implícito?)
+# Memoria Compartida 
 
 Es un modelo de programación paralela en el que varios procesadores o hilos 
 acceden al mismo espacio de memoria para leer y escribir datos.
@@ -219,7 +214,7 @@ y la sincronización.
 ****************************************************************************************************
 
 
-# Memoria Distribuida (Paralelismo Explícito?)
+# Memoria Distribuida
 
 La memoria distribuida es un modelo de computación paralela en el que cada 
 procesador o nodo tiene su propia memoria local, en lugar de compartir un 
@@ -391,8 +386,6 @@ Así, en total se utilizan 32 hilos en paralelo, combinando ambos modelos.
 ****************************************************************************************************
 
 
-# **TRABAJOS PARALELOS (GPU)**
-
 # Job Arrays
 
 Un Job Array (o arreglo de trabajos) es una forma de enviar múltiples trabajos similares al 
@@ -408,9 +401,9 @@ de entorno y salida.
 
 ```bash
     # Sintaxis básica
-    $SBATCH --array=0-9
-
-Este ejemplo crea 10 tareas (de 0 a 9).
+    #SBATCH --array=0-9 --> Crea 10 tareas (de 0 a 9).
+    #SBATCH --array=0-99%10 --> Ejecuta 100 tareas, máximo 10 a la vez.
+    #SBATCH --array=1-20:2 --> Ejecuta las tareas 1, 3, 5, ...,19 
 ```
 
 ```bash
@@ -428,7 +421,6 @@ Cada una tendrá una variable de entorno especial:
 | `--array=0-9` | Define los índices del arreglo |
 | `$SLURM_ARRAY_JOB_ID` | ID del trabajo principal |
 | `$SLURM_ARRAY_TASK_ID` | ID individual de cada tarea |
-| `--array=0-99%10` | Ejecuta 100 tareas, máximo 10 a la vez |
 | Ventaja | Ejecutar muchas tareas similares en paralelo fácilmente |
 
 >
@@ -480,11 +472,13 @@ Supón que tienes tres trabajos:
 - analizar.sh
 - graficar.sh
 
+#!bin/bash
+
 #1. Primero ejecutas el trabajo de preprocesamiento:
-    jid1=$(sbatch preprocesar.sh | awk '{print $4}')
+    jid1=$(sbatch preprocesar.sh)
 
 #2. Luego envías el segundo trabajo con dependencia:
-    jid2=$(sbatch --dependency=afterok:$jid1 analizar.sh | awk '{print $4}')
+    jid2=$(sbatch --dependency=afterok:$jid1 analizar.sh)
 
 #3. Y finalmente: 
     sbatch --dependency=afterok:$jid2 graficar.sh
@@ -492,9 +486,4 @@ Supón que tienes tres trabajos:
 #4. Asi, slurm gestionará automáticamente el orden: 
     preprocesar.sh → analizar.sh → graficar.sh
 ```
-
-## **ACTIVIDAD?**
-
-# Programación de trabajos
-
 
